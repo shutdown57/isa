@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="row q-my-sm items-center" dir="rtl">
-    <div class="col-1" v-text="tools.digitsEnToFa(`${(props.index ?? 1) + 1}`)"></div>
+    <div class="col-1" v-text="digitsEnToFa(`${(props.index ?? 1) + 1}`)"></div>
 
     <div class="col-6">
         <!-- v-model="productSelected" -->
@@ -44,7 +44,7 @@
 
         <template v-slot:control>
           <div class="self-center full-width no-outline">
-            {{ tools.digitsEnToFa(tools.addCommas(amount)) }}
+            {{ digitsEnToFa(addCommas(amount)) }}
           </div>
         </template>
       </q-field>
@@ -57,17 +57,14 @@
 </template>
 
 <script setup lang="ts">
+import { addCommas, digitsEnToFa } from 'src/boot/persianTools'
 import { ProductRow, SelectedPrice, SelectedQuantity } from 'src/interface/product'
-// // import Jalaali from 'src/mixins/jalaali'
 import { computed, onMounted, inject } from 'vue'
 import { useStore } from 'src/store'
 
 const props = defineProps<{product: ProductRow, index: number}>()
-console.log(props.product)
 
 const store = useStore()
-
-const tools = inject('persianTools')
 
 const emit = defineEmits<{(e: 'RowDelete', index: number): void
   (e: 'PriceValue', { price, index }: SelectedPrice): void
