@@ -3,20 +3,18 @@
     <div class="col-1" v-text="digitsEnToFa(`${(props.index ?? 1) + 1}`)"></div>
 
     <div class="col-6">
-        <!-- v-model="productSelected" -->
         <!-- @filter="filterProduct" -->
-      {{ product }}
       <q-select
         v-model="product"
-        use-input
-        input-debounce="700"
-        label="انتخاب محصول"
-        behavior="menu"
-        dense
-        outlined
         :options="products"
         option-value="id"
         option-label="name"
+        input-debounce="700"
+        label="انتخاب محصول"
+        behavior="menu"
+        use-input
+        outlined
+        dense
       >
         <template #no-option>
           <q-item>
@@ -59,7 +57,7 @@
 <script setup lang="ts">
 import { addCommas, digitsEnToFa } from 'src/boot/persianTools'
 import { ProductRow, SelectedPrice, SelectedQuantity } from 'src/interface/product'
-import { computed, onMounted, inject } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
 
 const props = defineProps<{product: ProductRow, index: number}>()
@@ -109,13 +107,17 @@ const product = computed({
     return props.product
   },
   set (p: ProductRow) {
-    if (!p) return
+    if (!p) return false
     const payload: ProductRow = {
       id: p.id,
       name: p.name,
       index: props.index
     }
     emit('ProductValue', payload)
+    if (price.value) return false
+    price.value = p.price ?? 0
+    if (quantity.value) return false
+    quantity.value = 1
   }
 })
 
