@@ -11,99 +11,99 @@ datasource db {
 }
 
 model Account {
-  id                    Int             @id @default(autoincrement())
-  name                  String
-  description           String?
-  bank                  String?
-  amount                Int?            @default(0)
-  accountNumber         String?
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  invoices              Invoice[]
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String?
+  bank          String?
+  amount        Int?      @default(0)
+  accountNumber String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  invoices      Invoice[]
 }
 
 model Customer {
-  id                    Int             @id @default(autoincrement())
-  name                  String?
-  description           String?
-  phone                 String          @unique
-  address               String?
-  city                  String?
-  representativeId      Int?
-  representative        Customer?       @relation("RepresentativePresents", fields: [representativeId], references: [id])
-  presents              Customer[]      @relation("RepresentativePresents")
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  installments          Installment[]
-  invoices              Invoice[]
+  id               Int           @id @default(autoincrement())
+  name             String?
+  description      String?
+  phone            String        @unique
+  address          String?
+  city             String?
+  representativeId Int?
+  representative   Customer?     @relation("RepresentativePresents", fields: [representativeId], references: [id])
+  presents         Customer[]    @relation("RepresentativePresents")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  installments     Installment[]
+  invoices         Invoice[]
 }
 
 model Invoice {
-  id                    Int                       @id @default(autoincrement())
-  number                String?                   @unique
-  totalAmount           Int?                      @default(0)
-  description           String?
-  installment           Boolean?                  @default(true)
-  installmentQuantity   Int?                      @default(0)
-  prepayment            Int?                      @default(0)
-  buy                   Boolean?                  @default(false)
-  createdAt             DateTime                  @default(now())
-  updatedAt             DateTime                  @updatedAt
-  customerId            Int?
-  customer              Customer?                 @relation(fields: [customerId], references: [id])
-  installments          Installment[]
-  products              InvoicesOnProducts[]
-  accountId             Int?
-  account               Account?                  @relation(fields: [accountId], references: [id])
-  vendorId              Int?
-  vendor                Vendor?                   @relation(fields: [vendorId], references: [id])
+  id                  Int                  @id @default(autoincrement())
+  number              String?              @unique
+  totalAmount         Int?                 @default(0)
+  description         String?
+  installment         Boolean?             @default(true)
+  installmentQuantity Int?                 @default(0)
+  prepayment          Int?                 @default(0)
+  buy                 Boolean?             @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  customerId          Int?
+  customer            Customer?            @relation(fields: [customerId], references: [id])
+  installments        Installment[]
+  products            InvoicesOnProducts[]
+  accountId           Int?
+  account             Account?             @relation(fields: [accountId], references: [id])
+  vendorId            Int?
+  vendor              Vendor?              @relation(fields: [vendorId], references: [id])
 }
 
 model Installment {
-  id                    Int             @id @default(autoincrement())
-  paid                  Boolean?        @default(false)
-  description           String?
-  amount                Int?             @default(0)
-  date                  DateTime?
-  customerId            Int?
-  customer              Customer?       @relation(fields: [customerId], references: [id])
-  invoiceId             Int?
-  invoice               Invoice?        @relation(fields: [invoiceId], references: [id])
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
+  id          Int       @id @default(autoincrement())
+  paid        Boolean?  @default(false)
+  description String?
+  amount      Int?      @default(0)
+  date        DateTime?
+  customerId  Int?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+  invoiceId   Int?
+  invoice     Invoice?  @relation(fields: [invoiceId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Product {
-  id                    Int             @id @default(autoincrement())
-  name                  String?
-  description           String?
-  quantity              Int             @default(0)
-  price                 Int             @default(0)
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  invoices              InvoicesOnProducts[]
+  id          Int                  @id @default(autoincrement())
+  name        String?
+  description String?
+  quantity    Int                  @default(0)
+  price       Int                  @default(0)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  invoices    InvoicesOnProducts[]
 }
 
 model InvoicesOnProducts {
-  id                    Int             @id @default(autoincrement())
-  price                 Int?            @default(0)
-  quantity              Int?            @default(0)
-  name                  String?
-  description           String?
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  invoiceId             Int?
-  invoice               Invoice?        @relation(fields: [invoiceId], references: [id])
-  productId             Int?
-  product               Product?        @relation(fields: [productId], references: [id])
+  id          Int      @id @default(autoincrement())
+  price       Int?     @default(0)
+  quantity    Int?     @default(0)
+  name        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  invoiceId   Int?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  productId   Int?
+  product     Product? @relation(fields: [productId], references: [id])
 }
 
 model Vendor {
-  id                    Int             @id @default(autoincrement())
-  name                  String
-  phone                 String?
-  description           String?
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  invoices              Invoice[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  phone       String?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  invoices    Invoice[]
 }
