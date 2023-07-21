@@ -1,6 +1,6 @@
-import { Product, ProductRow } from './product'
+import { InvoiceOnProduct, ProductRow } from './product'
 import { Customer } from './customer'
-import { Installment } from './installment'
+import { Installment, InstallmentCreate } from './installment'
 import { Account } from './account'
 import { Vendor } from './vendor'
 
@@ -18,7 +18,7 @@ export type Invoice = {
   installments?: Array<Installment>
   customerId?: number
   customer?: Customer
-  products?: Array<Product>
+  products?: Array<InvoiceOnProduct>
   accountId?: number
   account?: Account
   vendorId?: number
@@ -54,5 +54,14 @@ export type InvoiceUpdate = {
 
 export type InvoiceProduct = {
   id: number
+  products: Array<ProductRow>
+}
+
+export type InvoiceInstallment = {
+  id: number,
+  prepayment: number
+  installment: boolean
+  installmentQuantity: number
+  installments: Array<Installment>
   products: Array<ProductRow>
 }

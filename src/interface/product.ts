@@ -47,3 +47,15 @@ export type ProductRow = {
   description?: string
   quantity?: number
 }
+
+export type InvoiceOnProduct = {
+  id: number
+  price: number
+  quantity: number
+  description?: string
+  createdAt?: Date
+  updatedAt?: Date
+  invoiceId: Invoice
+  productId: Product
+  product: Product
+}
