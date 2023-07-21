@@ -50,11 +50,16 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
     await context.dispatch('getInvoice', { id: parseInt(id) })
   },
 
-  async upsertProducts (context, payload) {
-    const products = JSON.parse(JSON.stringify(payload.products))
+  async upsertProducts (_, payload): Promise<void> {
+    console.log(payload)
     const { id } = payload
-    await database.invoice('upsertProducts', { id, products })
-    // await context.dispatch('getInvoice', { id: parseInt(id) })
+    await database.invoice('upsertProducts', {
+      id,
+      products: JSON.parse(JSON.stringify(payload.products)),
+      prepayment: JSON.parse(JSON.stringify(payload.prepayment)),
+      installmentQuantity: JSON.parse(JSON.stringify(payload.installmentQuantity)),
+      installment: JSON.parse(JSON.stringify(payload.installment))
+    })
   },
 
   async productAdd (context, payload): Promise<void> {
@@ -63,6 +68,11 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
 
   async productRemove (context, payload): Promise<void> {
     context.commit('INVOICE_PRODUCTS_REMOVE', payload)
+  },
+
+  async count (context, payload): Promise<void> {
+    const data = await database.invoice('count', payload)
+    context.commit('INVOICE_COUNT', data)
   }
 }
 

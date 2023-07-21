@@ -15,6 +15,10 @@ const getters: GetterTree<InvoiceStateInterface, StateInterface> = {
 
   products (context): Array<Product> {
     return context.products
+  },
+
+  count (context): number {
+    return context.count
   }
 }
 

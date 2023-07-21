@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { InvoiceStateInterface } from './state'
-import { Invoice } from '../../interface/invoice'
-import { Product } from '../../interface/product'
+import { Invoice } from 'src/interface/invoice'
+import { Product } from 'src/interface/product'
 
 const mutation: MutationTree<InvoiceStateInterface> = {
   INVOICES_SET (state: InvoiceStateInterface, data: Array<Invoice>) {
@@ -16,8 +16,16 @@ const mutation: MutationTree<InvoiceStateInterface> = {
     state.products.push(data)
   },
 
+  INVOICE_PRODUCTS_CLEAR (state: InvoiceStateInterface) {
+    state.products = []
+  },
+
   INVOICE_PRODUCTS_REMOVE (state: InvoiceStateInterface, data: number) {
     state.invoice.products?.splice(data, 1)
+  },
+
+  INVOICE_COUNT (state: InvoiceStateInterface, data: number) {
+    state.count = data
   }
 }
 
