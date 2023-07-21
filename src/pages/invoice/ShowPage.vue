@@ -69,7 +69,7 @@
           <thead>
             <tr>
               <th class="text-center">شماره</th>
-              <th class="text-center">پرداخت شده</th>
+              <th class="text-center">پرداخت</th>
               <th class="text-center">مبلغ</th>
               <th class="text-center">توضیحات</th>
               <th class="text-center">تاریخ ایجاد</th>
@@ -86,11 +86,12 @@
                 <q-icon v-else name="close" color="negative" />
               </td>
               <td class="text-center">{{ digitsEnToFa(addCommas(`${installment.amount}`)) }}</td>
-              <td>{{ installment.description }}</td>
+              <td>{{ installment.description ?? '----' }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(installment.createdAt?.toString() || '')) }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(installment.updatedAt?.toString() || '')) }}</td>
               <td class="text-center">
-                <q-btn color="positive" lable="پرداخت" @click.prevent="handlePay(installment)" />
+                <q-btn v-if="!installment.paid" color="positive" icon="check" lable="پرداخت" @click.prevent="handlePay(installment)" />
+                <q-btn v-else color="negative" icon="close" lable="پرداخت" @click.prevent="handlePay(installment)" />
               </td>
             </tr>
           </tbody>
@@ -116,7 +117,7 @@
             <tr v-for="(product, index) in invoice.products" :key="product.id">
               <td class="text-center">{{ digitsEnToFa(index + 1) }}</td>
               <td class="text-center">{{ product?.product.name }}</td>
-              <td>{{ product.description ?? '---' }}</td>
+              <td>{{ product.description ?? '----' }}</td>
               <td class="text-center">{{ digitsEnToFa(`${product.quantity}`) }}</td>
               <td class="text-center">{{ digitsEnToFa(addCommas(product.price?.toString() || '')) }}</td>
               <td class="text-center">{{ digitsEnToFa(addCommas(amount(product))) }}</td>
@@ -164,7 +165,11 @@ const fetchData = async () => {
 
 const amount = (product: InvoiceOnProduct): number => (product.quantity * product.price) ?? 0
 const handlePay = async (installment: Installment): Promise<void> => {
-  // FIXME Add payment to installment
-  store.dispatch('', { id: installment.id })
+  store.dispatch('installment/update', {
+    id: installment.id,
+    paid: !installment.paid
+  })
+  const { invoiceId } = route.params
+  await store.dispatch('invoice/getInvoice', { id: invoiceId })
 }
 </script>
