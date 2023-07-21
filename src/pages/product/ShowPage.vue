@@ -4,31 +4,30 @@
       <q-card-section>
         <div class="q-gutter-md" style="min-width: 300px;max-width: 500px">
           <p>
-            <strong>کد: </strong> {{ enToFa(String(product.id)) }}
+            <strong>کد: </strong> {{ digitsEnToFa(String(product.id)) }}
           </p>
           <p>
             <strong>نام: </strong> {{ product.name }}
           </p>
           <p>
-            <strong>قیمت: </strong> {{ enToFa(addComma(product.price)) }}
+            <strong>قیمت: </strong> {{ digitsEnToFa(addCommas(product.price)) }}
           </p>
           <p>
-            <strong>تعداد: </strong> {{ enToFa(String(product.quantity)) }}
+            <strong>تعداد: </strong> {{ digitsEnToFa(String(product.quantity)) }}
           </p>
           <p>
             <strong>توضیحات: </strong> {{ product.description }}
           </p>
           <p>
-            <strong>تاریخ ایجاد: </strong> {{ enToFa(datetime(product.createdAt)) }}
+            <strong>تاریخ ایجاد: </strong> {{ digitsEnToFa(datetime(product.createdAt)) }}
           </p>
           <p>
-            <strong>تاریخ بروزرسانی: </strong> {{ enToFa(datetime(product.updatedAt)) }}
+            <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(product.updatedAt)) }}
           </p>
-          <!-- TODO: Add edit vendor -->
           <q-btn
             color="warning"
             label="ویرایش"
-            @click.prevent="$router.push({ path: `/product/show/${product.id}/edit` })"
+            @click.prevent="() => router.push({ path: `/product/show/${product.id}/edit` })"
           />
         </div>
       </q-card-section>
@@ -36,25 +35,18 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
-import jalaali from 'src/mixins/jalaali'
-import tools from 'src/mixins/tools'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { useRoute, useRouter } from 'vue-router'
+import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
 
-export default defineComponent({
-  name: 'ProductShowPage',
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
-  mixins: [jalaali, tools],
+const product = computed(() => store.getters['product/product'])
 
-  computed: {
-    ...mapGetters({
-      product: 'product/product'
-    })
-  },
-
-  mounted () {
-    this.$store.dispatch('product/getProduct', { id: this.$route.params.productId })
-  }
-})
+onMounted(() => store.dispatch('product/getProduct', { id: route.params.productId }))
 </script>
