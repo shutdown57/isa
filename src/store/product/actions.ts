@@ -14,7 +14,6 @@ const actions: ActionTree<ProductStateInterface, StateInterface> = {
       payload.offset = 0
     }
     const data = await database.product('all', payload)
-    console.log(data)
     context.commit('PRODUCTS_SET', data)
   },
 
