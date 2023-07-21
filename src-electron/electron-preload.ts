@@ -76,6 +76,8 @@ contextBridge.exposeInMainWorld('database', {
       return await installment.all(params.limit, params.offset)
     } else if (method === 'create') {
       await installment.create(params)
+    } else if (method === 'update') {
+      await installment.update(params)
     }
   },
 
