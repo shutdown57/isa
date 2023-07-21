@@ -51,7 +51,6 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
   },
 
   async upsertProducts (_, payload): Promise<void> {
-    console.log(payload)
     const { id } = payload
     await database.invoice('upsertProducts', {
       id,
