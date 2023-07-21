@@ -116,7 +116,6 @@ export class Invoice {
       }
     })
 
-    console.log(payload)
     if (payload.installment) {
       const installments = []
       const prepayment = parseInt(`${payload.prepayment ?? '0'}`)
