@@ -5,7 +5,7 @@
         <q-btn
           color="primary"
           label="افزودن فاکتور"
-          @click.prevent="() => $router.push({ path: '/invoice/create' })"
+          @click.prevent="() => router.push({ path: '/invoice/create' })"
         />
       </q-card-section>
     </q-card>
@@ -27,20 +27,20 @@
           </thead>
           <tbody>
             <tr v-for="invoice in invoices" :key="invoice.id">
-              <td class="text-center">{{ enToFa(invoice.id) }}</td>
+              <td class="text-center">{{ digitsEnToFa(invoice.id) }}</td>
               <td class="text-center">{{ invoice.number }}</td>
-              <td class="text-center">{{ enToFa(addComma(`${invoice.totalAmount}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(`${invoice.totalAmount}`)) }}</td>
               <td :class="[ 'text-center', invoice.prepayment !== invoice.totalAmount ? 'bg-red' : 'bg-green' ]">
-                {{ enToFa(addComma(`${invoice.prepayment}`)) }}
+                {{ digitsEnToFa(addCommas(`${invoice.prepayment}`)) }}
               </td>
               <td class="text-center">{{ invoice?.customer?.name }}</td>
-              <td class="text-center">{{ enToFa(datetime(invoice.createdAt)) }}</td>
-              <td class="text-center">{{ enToFa(datetime(invoice.updatedAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(invoice.createdAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(invoice.updatedAt)) }}</td>
               <td class="text-center">
                 <q-btn
                   color="info"
                   label="مشاهده"
-                  @click.prevent="() => $router.push({ path: '/invoice/show/' + invoice.id })"
+                  @click.prevent="() => router.push({ path: '/invoice/show/' + invoice.id })"
                 />
               </td>
             </tr>
@@ -49,39 +49,75 @@
       </q-card-section>
 
       <q-card-section class="row justify-center">
-        <!-- FIXME: Add pagination -->
-        <!-- <q-pagination -->
-        <!--   v-model="current" -->
-        <!--   max="5" -->
-        <!--   direction-links -->
-        <!--   flat -->
-        <!--   color="grey" -->
-        <!--   active-color="primary" -->
-        <!-- /> -->
+        <q-pagination
+          v-model="page"
+          :max="totalPages"
+          direction-links
+          flat
+          color="grey"
+          active-color="primary"
+        />
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
-import Tools from 'src/mixins/tools'
-import Jalaali from 'src/mixins/jalaali'
+<script setup lang="ts">
+import { ref, watch, computed, onMounted } from 'vue'
+import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useStore } from 'src/store'
+import { useRouter, useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'InvoiceIndexPage',
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-  mixins: [Tools, Jalaali],
+const current = ref(1)
+const limit = ref(20)
+const offset = ref(0)
 
-  computed: {
-    ...mapGetters({
-      invoices: 'invoice/invoices'
-    })
+const page = computed({
+  get () {
+    return current.value
   },
-
-  async mounted () {
-    this.$store.dispatch('invoice/getSellInvoices')
+  set (value) {
+    current.value = value
   }
+})
+const totalPages = computed(() => {
+  const result = invoiceCount.value % 20
+  const total = parseInt(`${invoiceCount.value / 20}`)
+  return result > 0 ? (total + 1) : total
+})
+const invoices = computed(() => store.getters['invoice/invoices'])
+const invoiceCount = computed(() => store.getters['invoice/count'])
+
+onMounted(() => {
+  const { limit: l, offset: o, page: p } = route.query
+  if (l) limit.value = parseInt(`${l}`)
+  if (o) offset.value = parseInt(`${o}`)
+  if (p) current.value = parseInt(`${p}`)
+  store.dispatch('invoice/getSellInvoices', {
+    limit: limit.value,
+    offset: offset.value
+  })
+  store.dispatch('invoice/count')
+})
+
+watch(current, (value) => {
+  limit.value = value * 20
+  offset.value = limit.value > 0 ? limit.value - 20 : 0
+  store.dispatch('invoice/getSellInvoices', {
+    limit: limit.value,
+    offset: offset.value
+  })
+  router.push({
+    query: {
+      limit: limit.value,
+      offset: offset.value,
+      page: current.value
+    }
+  })
 })
 </script>
