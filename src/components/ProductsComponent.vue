@@ -27,12 +27,11 @@ import { ProductRow, SelectedPrice, SelectedQuantity, SelectedProduct } from 'sr
 import { Invoice } from 'src/interface/invoice'
 import { onMounted, reactive, toRefs } from 'vue'
 import { QSpinnerGears, useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
 import { useStore } from 'src/store'
 
-const router = useRouter()
 const store = useStore()
 const $q = useQuasar()
+const emit = defineEmits<{(e: 'TotalAmount', totalAmount: number): void}>()
 
 const products = reactive<Array<ProductRow>>([])
 const props = defineProps<{invoice: Invoice}>()
@@ -99,9 +98,14 @@ const handleAddProduct = async () => {
   })
   await store.dispatch('invoice/upsertProducts', {
     id: invoice.id?.value,
+    prepayment: invoice.prepayment?.value,
+    installment: invoice.installment?.value,
+    installmentQuantity: invoice.installmentQuantity?.value,
     products: products
   })
-  router.push({ path: `/invoice/show/${invoice.id?.value}` })
+  let totalAmount = 0
+  products.forEach(v => { totalAmount += (parseInt(`${v.price || '0'}`) * parseInt(`${v.quantity || '0'}`)) })
+  emit('TotalAmount', totalAmount)
 }
 
 const handleRowDelete = ($event?: number) => {
