@@ -15,10 +15,9 @@ const actions: ActionTree<InstallmentStateInterface, StateInterface> = {
     }
   },
 
-  async setInstallments (context, payload) {
+  async update (_, payload) {
     try {
-      const data = await database.installment('createAll', payload)
-      context.commit('INSTALLMENTS_SET', data)
+      await database.installment('update', payload)
     } catch (err) {
       console.error(err)
     }
