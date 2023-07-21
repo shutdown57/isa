@@ -65,6 +65,8 @@ contextBridge.exposeInMainWorld('database', {
       await invoice.update(params)
     } else if (method === 'upsertProducts') {
       await invoice.upsertProducts(params)
+    } else if (method === 'count') {
+      return await invoice.count(params)
     }
   },
 
