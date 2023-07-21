@@ -11,11 +11,13 @@ import customer from './customer'
 import account from './account'
 import invoice from './invoice'
 import vendor from './vendor'
+import installment from './installment'
 import { ProductStateInterface } from './product/state'
 import { CustomerStateInterface } from './customer/state'
 import { AccountStateInterface } from './account/state'
 import { InvoiceStateInterface } from './invoice/state'
 import { VendorStateInterface } from './vendor/state'
+import { InstallmentStateInterface } from './installment/state'
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -38,7 +40,8 @@ export interface StateInterface {
   customer: CustomerStateInterface,
   account: AccountStateInterface,
   invoice: InvoiceStateInterface,
-  vendor: VendorStateInterface
+  vendor: VendorStateInterface,
+  installment: InstallmentStateInterface
 }
 
 // provide typings for `this.$store`
@@ -65,7 +68,8 @@ export default store(function (/* { ssrContext } */) {
       customer,
       account,
       invoice,
-      vendor
+      vendor,
+      installment
     },
 
     // enable strict mode (adds overhead!)
