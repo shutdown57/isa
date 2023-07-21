@@ -1,16 +1,25 @@
 import { PrismaClient } from '@prisma/client'
 import { ProductRow } from 'src/interface/product'
 
-import { InvoiceCreate, InvoiceProduct, InvoiceUpdate } from '../../src/interface/invoice'
+import { InvoiceCreate, InvoiceInstallment, InvoiceProduct, InvoiceUpdate } from '../../src/interface/invoice'
 
 export class Invoice {
   private prisma
 
-  constructor () {
+  constructor() {
     this.prisma = new PrismaClient()
   }
 
-  async all (limit: number = 20, offset: number = 0, buy: boolean = false): Promise<any> {
+  async count(buy: boolean | null) {
+    if (buy === null) {
+      return await this.prisma.invoice.count()
+    } else if (buy) {
+      return await this.prisma.invoice.count({ where: { buy: true } })
+    }
+    return await this.prisma.invoice.count({ where: { buy: false } })
+  }
+
+  async all(limit: number = 20, offset: number = 0, buy: boolean = false): Promise<any> {
     return await this
       .prisma
       .invoice
@@ -25,18 +34,20 @@ export class Invoice {
       })
   }
 
-  async create (payload: InvoiceCreate) {
-    return await this.prisma.invoice.create({ data: payload })
+  async create(payload: InvoiceCreate) {
+    return await this.prisma.invoice.create({
+      data: payload
+    })
   }
 
-  async byId (id: number) {
+  async byId(id: number) {
     return await this
       .prisma
       .invoice
       .findFirst({
         where: { id },
         include: {
-          products: true,
+          products: { include: { product: true } },
           customer: true,
           vendor: true,
           account: true,
@@ -45,7 +56,7 @@ export class Invoice {
       })
   }
 
-  async update (payload: InvoiceUpdate) {
+  async update(payload: InvoiceUpdate) {
     const { id } = payload
     if (payload.buy) {
       await this.prisma.invoice.update({
@@ -82,7 +93,7 @@ export class Invoice {
     }
   }
 
-  async upsertProducts (payload: InvoiceProduct) {
+  async upsertProducts(payload: InvoiceInstallment) {
     const { id } = payload
     await this.prisma.invoice.update({
       where: { id },
@@ -104,5 +115,79 @@ export class Invoice {
         }
       }
     })
+
+    console.log(payload)
+    if (payload.installment) {
+      const installments = []
+      const prepayment = parseInt(`${payload.prepayment ?? '0'}`)
+      const count = payload.installmentQuantity ?? 1
+      const amount = prepayment / count
+      for (let i = 0; i < count; i++) {
+        installments.push({ paid: false, amount })
+      }
+      return await this.prisma.invoice.update({
+        where: { id: payload.id },
+        data: {
+          installments: {
+            create: installments
+          }
+        }
+      })
+    }
   }
+
+  // async upsertInstallments (payload: InvoiceInstallment) {
+  //   const { id } = payload
+  //   await this.prisma.$transaction(
+  //     payload.installments.map((i) => {
+  //       const installment = {
+  //         paid: i?.paid ?? false,
+  //         description: i.description ? i.description : undefined,
+  //         amount: i?.amount || 0,
+  //         date: i?.date || undefined,
+  //         customerId: parseInt(`${i.customerId}`),
+  //         createdAt: new Date,
+  //         updatedAt: new Date
+  //       }
+  //       return this.prisma.invoice.update({
+  //         where: { id },
+  //         data: {
+  //           installments: {
+  //             upsert: {
+  //               create: {
+  //                 paid: installment.paid,
+  //                 description: installment.description,
+  //                 amount: installment.amount,
+  //                 date: installment.date,
+  //                 customer: {
+  //                   connect: {
+  //                     id: installment.customerId
+  //                   }
+  //                 },
+  //                 createdAt: installment.createdAt,
+  //                 updatedAt: installment.updatedAt
+  //               },
+  //               update: {
+  //                 paid: installment.paid ?? false,
+  //                 description: installment?.description || null,
+  //                 amount: installment?.amount || 0,
+  //                 date: installment?.date || null,
+  //                 customer: {
+  //                   connect: {
+  //                     id: installment.customerId
+  //                   }
+  //                 },
+  //                 createdAt: installment.createdAt,
+  //                 updatedAt: installment.updatedAt
+  //               }
+  //             }
+  //           }
+  //         },
+  //         include: {
+  //           installments: true
+  //         }
+  //       })
+  //     })
+  //   )
+  // }
 }
