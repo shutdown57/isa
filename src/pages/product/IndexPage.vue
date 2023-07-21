@@ -26,12 +26,12 @@
           </thead>
           <tbody>
             <tr v-for="product in products" :key="product.id">
-              <td class="text-center">{{ enToFa(product.id) }}</td>
+              <td class="text-center">{{ digitsEnToFa(product.id) }}</td>
               <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ enToFa(addComma(`${product.price}`)) }}</td>
-              <td class="text-center">{{ enToFa(addComma(`${product.quantity}`)) }}</td>
-              <td class="text-center">{{ enToFa(datetime(product.createdAt)) }}</td>
-              <td class="text-center">{{ enToFa(datetime(product.updatedAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.price}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.quantity}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(product.createdAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(product.updatedAt)) }}</td>
               <td class="text-center">
                 <q-btn
                   color="info"
@@ -47,25 +47,14 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
-import Tools from 'src/mixins/tools'
-import Jalaali from 'src/mixins/jalaali'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
 
-export default defineComponent({
-  name: 'ProductIndexPage',
+const store = useStore()
 
-  mixins: [Tools, Jalaali],
+const products = computed(() => store.getters['product/products'])
 
-  computed: {
-    ...mapGetters({
-      products: 'product/products'
-    })
-  },
-
-  async mounted () {
-    this.$store.dispatch('product/getProducts')
-  }
-})
+onMounted(() => store.dispatch('product/getProducts'))
 </script>
