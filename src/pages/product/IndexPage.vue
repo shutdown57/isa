@@ -5,7 +5,7 @@
         <q-btn
           color="primary"
           label="افزودن محصول"
-          @click.prevent="() => $router.push({ path: '/product/create' })"
+          @click.prevent="() => router.push({ path: '/product/create' })"
         />
       </q-card-section>
     </q-card>
@@ -29,14 +29,14 @@
               <td class="text-center">{{ digitsEnToFa(product.id) }}</td>
               <td class="text-center">{{ product.name }}</td>
               <td class="text-center">{{ digitsEnToFa(addCommas(`${product.price}`)) }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.quantity}`)) }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(product.createdAt)) }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(product.updatedAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(String(product.quantity)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(product.createdAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(product.updatedAt)) }}</td>
               <td class="text-center">
                 <q-btn
                   color="info"
                   label="مشاهده"
-                  @click.prevent="() => $router.push({ path: '/product/show/' + product.id })"
+                  @click.prevent="routeToShowPage(product.id)"
                 />
               </td>
             </tr>
@@ -51,10 +51,17 @@
 import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
 import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
 const products = computed(() => store.getters['product/products'])
 
 onMounted(() => store.dispatch('product/getProducts'))
+
+const routeToShowPage = (id: number) => {
+  router.push({ path: `/product/show/${id}` })
+}
 </script>
