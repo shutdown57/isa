@@ -23,45 +23,40 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-red">
-          <q-btn flat label="OK" v-close-popup />
+          <q-btn flat label="خب" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useStore } from 'src/store'
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'ProductCreatePage',
+const store = useStore()
+const router = useRouter()
 
-  data () {
-    return {
-      name: '',
-      description: '',
-      price: '',
-      quantity: '',
-      alert: false
-    }
-  },
+const name = ref('')
+const description = ref('')
+const price = ref('')
+const quantity = ref('')
+const alert = ref(false)
 
-  methods: {
-    async handleCreateProduct () {
-      if (!this.name) {
-        this.alert = true
-        return false
-      }
-      const product = {
-        name: this.name,
-        description: this.description,
-        price: parseInt(this.price || '0'),
-        quantity: parseInt(this.quantity || '0')
-      }
-
-      await this.$store.dispatch('product/createProduct', product)
-      this.$router.push({ path: '/product' })
-    }
+const handleCreateProduct = async () => {
+  if (!name.value) {
+    alert.value = true
+    return false
   }
-})
+  const product = {
+    name: name.value,
+    description: description.value,
+    price: parseInt(price.value || '0'),
+    quantity: parseInt(quantity.value || '0')
+  }
+
+  await store.dispatch('product/createProduct', product)
+  router.push({ path: '/product' })
+}
 </script>
