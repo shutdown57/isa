@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
-import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { digitsEnToFa } from 'src/boot/persianTools'
 import { datetime } from 'src/boot/jalaali'
 import { useRouter } from 'vue-router'
 
