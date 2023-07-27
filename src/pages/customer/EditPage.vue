@@ -7,7 +7,7 @@
           <q-input outlined dense v-model="phone" label="شماره تلفن" />
           <q-input outlined dense v-model="address" label="آدرس" type="textarea" />
           <q-input outlined dense v-model="description" label="توضیحات" type="textarea" />
-          <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateCustomer" />
+          <q-btn color="secondary" label="ثبت" @click.prevent="handleUpdateCustomer" />
         </div>
       </q-card-section>
     </q-card>
@@ -30,55 +30,48 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { useRouter, useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'CustomerEditPage',
-  data () {
-    return {
-      name: '',
-      phone: '',
-      address: '',
-      description: '',
-      alert: false
-    }
-  },
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-  computed: {
-    ...mapGetters({
-      customer: 'customer/customer'
-    })
-  },
+const name = ref('')
+const phone = ref('')
+const address = ref('')
+const description = ref('')
+const alert = ref(false)
 
-  async mounted () {
-    await this.$store.dispatch('customer/getCustomer', {
-      id: this.$route.params.customerId
-    })
-    this.name = this.customer.name
-    this.phone = this.customer.phone
-    this.address = this.customer.address
-    this.description = this.customer.description
-  },
+const customer = computed(() => store.getters['customer/customer'])
 
-  methods: {
-    async handleCreateCustomer () {
-      if (!this.name || !this.phone) {
-        this.alert = true
-        return false
-      }
-
-      const product = {
-        name: this.name,
-        phone: this.phone,
-        address: this.address,
-        description: this.description
-      }
-
-      await this.$store.dispatch('customer/updateCustomer', product)
-      this.$router.push({ path: '/customer' })
-    }
-  }
+onMounted(async () => {
+  await store.dispatch('customer/getCustomer', {
+    id: route.params.customerId
+  })
+  name.value = customer.value.name
+  phone.value = customer.value.phone
+  address.value = customer.value.address
+  description.value = customer.value.description
 })
+
+const handleUpdateCustomer = async () => {
+  if (!name.value || !phone.value) {
+    alert.value = true
+    return false
+  }
+
+  const payload = {
+    id: route.params.customerId,
+    name: name.value,
+    phone: phone.value,
+    address: address.value,
+    description: description.value
+  }
+
+  await store.dispatch('customer/update', payload)
+  router.push({ path: '/customer' })
+}
 </script>
