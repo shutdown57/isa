@@ -7,7 +7,7 @@
           <q-input outlined dense v-model="description" label="توضیحات محصول" type="textarea" />
           <q-input outlined dense v-model="price" label="قیمت مصحول" />
           <q-input outlined dense v-model="quantity" label="تعداد محصول" />
-          <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateProduct" />
+          <q-btn color="secondary" label="ثبت" @click.prevent="handleUpdateProduct" />
         </div>
       </q-card-section>
     </q-card>
@@ -23,60 +23,52 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-red">
-          <q-btn flat label="OK" v-close-popup />
+          <q-btn flat label="خب" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { useRoute, useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'ProductEditPage',
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
-  data () {
-    return {
-      name: '',
-      description: '',
-      price: '',
-      quantity: '',
-      alert: false
-    }
-  },
+const name = ref('')
+const description = ref('')
+const price = ref('')
+const quantity = ref('')
+const alert = ref(false)
 
-  computed: {
-    ...mapGetters({
-      product: 'product/product'
-    })
-  },
+const product = computed(() => store.getters['product/product'])
 
-  async mounted () {
-    await this.$store.dispatch('product/getProduct', { id: this.$route.params.productId })
-    this.name = this.product.name
-    this.description = this.product.description
-    this.price = this.product.price
-    this.quantity = this.product.quantity
-  },
-
-  methods: {
-    async handleCreateProduct () {
-      if (!this.name) {
-        this.alert = true
-        return false
-      }
-      const product = {
-        name: this.name,
-        description: this.description,
-        price: parseInt(this.price || '0'),
-        quantity: parseInt(this.quantity || '0')
-      }
-
-      await this.$store.dispatch('product/updateProduct', product)
-      this.$router.push({ path: '/product' })
-    }
-  }
+onMounted(async () => {
+  await store.dispatch('product/getProduct', { id: route.params.productId })
+  name.value = product.value.name
+  description.value = product.value.description
+  price.value = product.value.price
+  quantity.value = product.value.quantity
 })
+
+const handleUpdateProduct = async () => {
+  if (!name.value) {
+    alert.value = true
+    return false
+  }
+  const payload = {
+    id: product.value.id,
+    name: name.value,
+    description: description.value,
+    price: parseInt(price.value || '0'),
+    quantity: parseInt(quantity.value || '0')
+  }
+
+  await store.dispatch('product/update', payload)
+  router.push({ path: '/product' })
+}
 </script>
