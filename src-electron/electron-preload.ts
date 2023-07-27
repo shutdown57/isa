@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('database', {
       return await product.byId(parseInt(id))
     } else if (method === 'search') {
       return await product.search(params.needle)
+    } else if (method === 'update') {
+      await product.update(params)
     }
   },
 
