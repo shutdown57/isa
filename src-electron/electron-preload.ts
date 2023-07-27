@@ -35,6 +35,8 @@ contextBridge.exposeInMainWorld('database', {
       return await customer.byId(parseInt(id))
     } else if (method === 'search') {
       return await customer.search(params.needle)
+    } else if (method === 'update') {
+      await customer.update(params)
     }
   },
 

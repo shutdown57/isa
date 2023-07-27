@@ -29,6 +29,10 @@ const actions: ActionTree<CustomerStateInterface, StateInterface> = {
   async search (context, payload) {
     const data = await database.customer('search', payload)
     context.commit('CUSTOMERS_SET', data)
+  },
+
+  async update (_, payload) {
+    await database.customer('update', payload)
   }
 }
 
