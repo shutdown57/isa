@@ -10,10 +10,7 @@ export class Account {
   }
 
   async all (limit: number = 20, offset: number = 0): Promise<any> {
-    return await this
-      .prisma
-      .account
-      .findMany({
+    return await this.prisma.account.findMany({
         skip: offset,
         take: limit,
         orderBy: { name: 'asc' }
@@ -35,7 +32,7 @@ export class Account {
   async update (payload: AccountUpdate) {
     const { id, ...data } = payload
     await this.prisma.account.update({
-      where: { id },
+      where: { id: parseInt(`${id}`) },
       data
     })
   }
