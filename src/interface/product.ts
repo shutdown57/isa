@@ -11,6 +11,14 @@ export type Product = {
   invoices?: Invoice
 }
 
+export type ProductUpdate = {
+  id: number
+  name: string
+  description?: string
+  quantity?: number
+  price?: number
+}
+
 export type ProductCreate = {
   name: string
   description?: string
