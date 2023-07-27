@@ -31,40 +31,36 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useStore } from 'src/store'
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'AccountCreatePage',
-  data () {
-    return {
-      name: '',
-      bank: '',
-      amount: '0',
-      accountNumber: '',
-      description: '',
-      alert: false
-    }
-  },
+const store = useStore()
+const router = useRouter()
 
-  methods: {
-    async handleCreateAccount () {
-      if (!this.name || !this.bank || !this.accountNumber) {
-        this.alert = true
-        return false
-      }
+const name = ref('')
+const bank = ref('')
+const description = ref('')
+const accountNumber = ref('')
+const amount = ref('')
+const alert = ref(false)
 
-      const account = {
-        name: this.name,
-        bank: this.bank,
-        amount: parseInt(this.amount),
-        accountNumber: this.accountNumber,
-        description: this.description
-      }
-
-      await this.$store.dispatch('account/createAccount', account)
-      this.$router.push({ path: '/account' })
-    }
+const handleCreateAccount = async () => {
+  if (!name.value || !bank.value || !accountNumber.value) {
+    alert.value = true
+    return false
   }
-})
+
+  const account = {
+    name: name.value,
+    bank: bank.value,
+    amount: parseInt(amount.value),
+    accountNumber: accountNumber.value,
+    description: description.value
+  }
+
+  await store.dispatch('account/createAccount', account)
+  router.push({ path: '/account' })
+}
 </script>

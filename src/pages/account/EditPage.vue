@@ -31,64 +31,49 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { useRoute, useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'AccountEditPage',
-  data () {
-    return {
-      name: '',
-      bank: '',
-      amount: '0',
-      accountNumber: '',
-      description: '',
-      alert: false
-    }
-  },
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
-  computed: {
-    ...mapGetters({
-      account: 'account/account'
-    })
-  },
+const name = ref('')
+const bank = ref('')
+const amount = ref(0)
+const description = ref('')
+const accountNumber = ref('')
+const alert = ref(false)
 
-  mounted () {
-    this.fetchData()
-  },
+const account = computed(() => store.getters['account/account'])
 
-  methods: {
-    async fetchData () {
-      await this.$store.dispatch('account/getAccount', {
-        id: this.$route.params.accountId
-      })
-
-      this.name = await this.account.name
-      this.bank = await this.account.bank
-      this.amount = await this.account.amount
-      this.accountNumber = await this.account.accountNumber
-      this.description = await this.account.description
-    },
-
-    async handleCreateAccount () {
-      if (!this.name || !this.bank || !this.accountNumber) {
-        this.alert = true
-        return false
-      }
-
-      const account = {
-        id: this.account.id,
-        name: this.name,
-        bank: this.bank,
-        amount: parseInt(this.amount),
-        accountNumber: this.accountNumber,
-        description: this.description
-      }
-
-      await this.$store.dispatch('account/updateAccount', account)
-      this.$router.push({ path: '/account/show/' + this.account.id })
-    }
-  }
+onMounted(async () => {
+  await store.dispatch('account/getAccount', { id: route.params.accountId })
+  name.value = account.value.name
+  bank.value = account.value.bank
+  description.value = account.value.description
+  amount.value = account.value.amount
+  accountNumber.value = account.value.accountNumber
 })
+
+const handleCreateAccount = async () => {
+  if (!name.value || !bank.value || !accountNumber.value) {
+    alert.value = true
+    return false
+  }
+
+  const payload = {
+    id: account.value.id,
+    name: name.value,
+    bank: bank.value,
+    amount: parseInt(`${amount.value}`),
+    accountNumber: accountNumber.value,
+    description: description.value
+  }
+
+  await store.dispatch('account/updateAccount', payload)
+  router.push({ path: '/account/show/' + account.value.id })
+}
 </script>

@@ -13,7 +13,7 @@
             <strong>بانک: </strong> {{ account.bank }}
           </p>
           <p>
-            <strong>مقدار: </strong> {{ enToFa(addComma(account.amount)) }}
+            <strong>مقدار: </strong> {{ digitsEnToFa(addCommas(account.amount)) }}
           </p>
           <p>
             <strong>شماره حساب: </strong> {{ account.accountNumber }}
@@ -22,16 +22,16 @@
             <strong>توضیحات: </strong> {{ account.description }}
           </p>
           <p>
-            <strong>تاریخ ایجاد: </strong> {{ enToFa(datetime(account.createdAt)) }}
+            <strong>تاریخ ایجاد: </strong> {{ digitsEnToFa(datetime(account.createdAt)) }}
           </p>
           <p>
-            <strong>تاریخ بروزرسانی: </strong> {{ enToFa(datetime(account.updatedAt)) }}
+            <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(account.updatedAt)) }}
           </p>
           <!-- TODO: Add edit account -->
           <q-btn
             color="warning"
             label="ویرایش"
-            @click.prevent="handleEditPage"
+            @click.prevent="() => router.push({ path: '/account/edit/' + account.id })"
           />
         </div>
       </q-card-section>
@@ -46,44 +46,22 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useRouter, useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'AccountShowPage',
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-  computed: {
-    ...mapGetters({
-      account: 'account/account'
-    })
-  },
+const account = computed(() => store.getters['account/account'])
 
-  mounted () {
-    this.$store.dispatch('account/getAccount', {
-      id: this.$route.params.accountId
-    })
-  },
-
-  methods: {
-    enToFa (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.digitsEnToFa(value)
-    },
-
-    addComma (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.addCommas(value)
-    },
-
-    datetime (value: string): string {
-      // @ts-ignore
-      return this.$moment(value).format('jYYYY/jM/jD HH:mm')
-    },
-
-    handleEditPage () {
-      this.$router.push({ path: '/account/edit/' + this.account.id })
-    }
-  }
+onMounted(() => {
+  store.dispatch('account/getAccount', {
+    id: route.params.accountId
+  })
 })
 </script>

@@ -5,7 +5,7 @@
         <q-btn
           color="primary"
           label="افزودن حساب"
-          @click.prevent="() => $router.push({ path: '/account/create' })"
+          @click.prevent="() => router.push({ path: '/account/create' })"
         />
       </q-card-section>
     </q-card>
@@ -35,18 +35,18 @@
           </thead>
           <tbody>
             <tr v-for="account in accounts" :key="account.id">
-              <td class="text-center">{{ enToFa(account.id) }}</td>
+              <td class="text-center">{{ digitsEnToFa(account.id) }}</td>
               <td class="text-center">{{ account.name }}</td>
               <td class="text-center">{{ account.bank }}</td>
-              <td class="text-center">{{ enToFa(addComma(account.amount)) }}</td>
-              <td class="text-center">{{ enToFa(account.accountNumber) }}</td>
-              <td class="text-center">{{ enToFa(datetime(account.createdAt)) }}</td>
-              <td class="text-center">{{ enToFa(datetime(account.updatedAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(account.amount)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(account.accountNumber) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(account.createdAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(account.updatedAt)) }}</td>
               <td class="text-center">
                 <q-btn
                   color="info"
                   label="مشاهده"
-                  @click.prevent="() => $router.push({ path: '/account/show/' + account.id })"
+                  @click.prevent="() => router.push({ path: '/account/show/' + account.id })"
                 />
               </td>
             </tr>
@@ -57,25 +57,19 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
-import Tools from 'src/mixins/tools'
-import Jalaali from 'src/mixins/jalaali'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'AccountIndexPage',
+const store = useStore()
+const router = useRouter()
 
-  mixins: [Tools, Jalaali],
+const accounts = computed(() => store.getters['account/accounts'])
 
-  computed: {
-    ...mapGetters({
-      accounts: 'account/accounts'
-    })
-  },
-
-  async mounted () {
-    this.$store.dispatch('account/getAccounts')
-  }
+onMounted(() => {
+  store.dispatch('account/getAccounts')
 })
 </script>
