@@ -22,16 +22,16 @@
             <strong>توضیحات: </strong> {{ customer.description }}
           </p>
           <p>
-            <strong>تاریخ ایجاد: </strong> {{ enToFa(datetime(customer.createdAt)) }}
+            <strong>تاریخ ایجاد: </strong> {{ digitsEnToFa(datetime(customer.createdAt)) }}
           </p>
           <p>
-            <strong>تاریخ بروزرسانی: </strong> {{ enToFa(datetime(customer.updatedAt)) }}
+            <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(customer.updatedAt)) }}
           </p>
           <!-- TODO: Add edit customer -->
           <q-btn
             color="warning"
             label="ویرایش"
-            @click.prevent="$router.push({ path: `/customer/show/${customer.id}/edit` })"
+            @click.prevent="router.push({ path: `/customer/show/${customer.id}/edit` })"
           />
         </div>
       </q-card-section>
@@ -74,17 +74,17 @@
           </thead>
           <tbody>
             <tr v-for="present in customer.presents" :key="present.id">
-              <td class="text-center">{{ enToFa(present.id) }}</td>
+              <td class="text-center">{{ digitsEnToFa(present.id) }}</td>
               <td class="text-center">{{ present.name }}</td>
               <td class="text-center">{{ present.phone }}</td>
               <td class="text-center">{{ present.address }}</td>
-              <td class="text-center">{{ enToFa(datetime(present.createdAt)) }}</td>
-              <td class="text-center">{{ enToFa(datetime(present.updatedAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(present.createdAt)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(datetime(present.updatedAt)) }}</td>
               <td class="text-center">
                 <q-btn
                   color="info"
                   label="مشاهده"
-                  @click.prevent="() => $router.push({ path: '/customer/show/' + present.id })"
+                  @click.prevent="() => router.push({ path: '/customer/show/' + present.id })"
                 />
               </td>
             </tr>
@@ -109,40 +109,22 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { digitsEnToFa } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useRouter, useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'CustomerShowPage',
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-  computed: {
-    ...mapGetters({
-      customer: 'customer/customer'
-    })
-  },
+const customer = computed(() => store.getters['customer/customer'])
 
-  mounted () {
-    this.$store.dispatch('customer/getCustomer', {
-      id: this.$route.params.customerId
-    })
-  },
-
-  methods: {
-    enToFa (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.digitsEnToFa(value)
-    },
-
-    addComma (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.addCommas(value)
-    },
-
-    datetime (value: string): string {
-      // @ts-ignore
-      return this.$moment(value).format('jYYYY/jM/jD HH:mm')
-    }
-  }
+onMounted(() => {
+  store.dispatch('customer/getCustomer', {
+    id: route.params.customerId
+  })
 })
 </script>
