@@ -24,6 +24,10 @@ const actions: ActionTree<VendorStateInterface, StateInterface> = {
   async getVendor (context, payload) {
     const data = await database.vendor('byId', payload)
     context.commit('VENDOR_SET', data)
+  },
+
+  async update (_, payload) {
+    await database.vendor('update', payload)
   }
 }
 
