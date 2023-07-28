@@ -15,3 +15,10 @@ export type VendorCreate = {
   phone?: string
   description?: string
 }
+
+export type VendorUpdate = {
+  id: number
+  name: string
+  phone?: string
+  description?: string
+}
