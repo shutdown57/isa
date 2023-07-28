@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-import { VendorCreate } from '../../src/interface/vendor'
+import { VendorCreate, VendorUpdate } from 'src/interface/vendor'
 
 export class Vendor {
   private prisma
@@ -23,6 +23,14 @@ export class Vendor {
       include: {
         invoices: true
       }
+    })
+  }
+
+  async update(payload: VendorUpdate) {
+    const { id, ...data } = payload
+    await this.prisma.vendor.update({
+      where: { id: parseInt(`${id}`) },
+      data
     })
   }
 }

@@ -94,6 +94,8 @@ contextBridge.exposeInMainWorld('database', {
     } else if (method === 'byId') {
       const { id } = params
       return await vendor.byId(parseInt(id))
+    } else if (method === 'update') {
+      await vendor.update(params)
     }
   }
 })
