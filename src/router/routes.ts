@@ -106,6 +106,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/vendor/ShowPage.vue') }]
   },
+  {
+    path: '/vendor/edit/:vendorId',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/vendor/EditPage.vue') }]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
