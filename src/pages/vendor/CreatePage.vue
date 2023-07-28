@@ -29,36 +29,32 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useStore } from 'src/store'
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'CustomerCreatePage',
-  data () {
-    return {
-      name: '',
-      phone: '',
-      description: '',
-      alert: false
-    }
-  },
+const store = useStore()
+const router = useRouter()
 
-  methods: {
-    async handleCreateVendor () {
-      if (!this.name || !this.phone) {
-        this.alert = true
-        return false
-      }
+const name = ref('')
+const description = ref('')
+const phone = ref('')
+const alert = ref(false)
 
-      const vendor = {
-        name: this.name,
-        phone: this.phone,
-        description: this.description
-      }
-
-      await this.$store.dispatch('vendor/createVendor', vendor)
-      this.$router.push({ path: '/vendor' })
-    }
+const handleCreateVendor = async () => {
+  if (!name.value || !phone.value) {
+    alert.value = true
+    return false
   }
-})
+
+  const payload = {
+    name: name.value,
+    phone: phone.value,
+    description: description.value
+  }
+
+  await store.dispatch('vendor/createVendor', payload)
+  router.push({ path: '/vendor' })
+}
 </script>

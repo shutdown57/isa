@@ -16,15 +16,16 @@
             <strong>توضیحات: </strong> {{ vendor.description }}
           </p>
           <p>
-            <strong>تاریخ ایجاد: </strong> {{ enToFa(datetime(vendor.createdAt)) }}
+            <strong>تاریخ ایجاد: </strong> {{ digitsEnToFa(datetime(vendor.createdAt)) }}
           </p>
           <p>
-            <strong>تاریخ بروزرسانی: </strong> {{ enToFa(datetime(vendor.updatedAt)) }}
+            <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(vendor.updatedAt)) }}
           </p>
           <!-- TODO: Add edit vendor -->
           <q-btn
             color="warning"
             label="ویرایش"
+            @click.prevent="() => router.push({ path: '/vendor/edit/' + vendor.id })"
           />
         </div>
       </q-card-section>
@@ -39,40 +40,22 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { digitsEnToFa } from 'src/boot/persianTools'
+import { datetime } from 'src/boot/jalaali'
+import { useRouter, useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'VendorShowPage',
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
 
-  computed: {
-    ...mapGetters({
-      vendor: 'vendor/vendor'
-    })
-  },
+const vendor = computed(() => store.getters['vendor/vendor'])
 
-  mounted () {
-    this.$store.dispatch('vendor/getVendor', {
-      id: this.$route.params.vendorId
-    })
-  },
-
-  methods: {
-    enToFa (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.digitsEnToFa(value)
-    },
-
-    addComma (value: string): string {
-      // @ts-ignore
-      return this.$persianTools.addCommas(value)
-    },
-
-    datetime (value: string): string {
-      // @ts-ignore
-      return this.$moment(value).format('jYYYY/jM/jD HH:mm')
-    }
-  }
+onMounted(() => {
+  store.dispatch('vendor/getVendor', {
+    id: route.params.vendorId
+  })
 })
 </script>
