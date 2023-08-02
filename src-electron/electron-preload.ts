@@ -6,8 +6,18 @@ import { Account } from './database/account.table'
 import { Invoice } from './database/invoice.table'
 import { Installment } from './database/installment.table'
 import { Vendor } from './database/vendor.table'
+import { Expense } from './database/expense.table'
 
 contextBridge.exposeInMainWorld('database', {
+  async expense (method: string, params: any) {
+    const expense = new Expense()
+    if (method === 'all') {
+      await expense.all(params)
+    } else if (method === 'create') {
+      await expense.create(params)
+    }
+  },
+
   async product (method: string, params: any) {
     const product = new Product()
     if (method === 'all') {
