@@ -107,3 +107,12 @@ model Vendor {
   updatedAt   DateTime  @updatedAt
   invoices    Invoice[]
 }
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  title       String
+  amount      Int?     @default(0)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
