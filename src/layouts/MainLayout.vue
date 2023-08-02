@@ -45,34 +45,21 @@
   </q-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
+const ISA_VERSION = ref('')
+if (process.env.VERSION) {
+  ISA_VERSION.value = process.env.VERSION
+}
+const leftDrawerOpen = ref(false)
+const essentialLinks = reactive([
   {
     title: 'داشبورد',
     caption: 'صفحه اصلی',
     icon: 'dashboard',
     link: '/'
-  },
-  {
-    title: 'محصولات',
-    caption: 'مدیریت محصولات',
-    icon: 'inventory',
-    link: '/product'
-  },
-  {
-    title: 'مشتریان',
-    caption: 'مدیریت مشتریان',
-    icon: 'people',
-    link: '/customer'
-  },
-  {
-    title: 'حساب‌ها',
-    caption: 'مدیریت حساب‌ها',
-    icon: 'account_balance',
-    link: '/account'
   },
   {
     title: 'فاکتور‌ها',
@@ -81,36 +68,38 @@ const linksList = [
     link: '/invoice'
   },
   {
+    title: 'هزینه‌ها',
+    caption: 'مدیریت هزینه‌ها',
+    icon: 'credit_card',
+    link: '/expense'
+  },
+  {
+    title: 'مشتریان',
+    caption: 'مدیریت مشتریان',
+    icon: 'people',
+    link: '/customer'
+  },
+  {
+    title: 'محصولات',
+    caption: 'مدیریت محصولات',
+    icon: 'inventory',
+    link: '/product'
+  },
+  {
+    title: 'حساب‌ها',
+    caption: 'مدیریت حساب‌ها',
+    icon: 'account_balance',
+    link: '/account'
+  },
+  {
     title: 'فروشگاه‌ها',
     caption: 'مدیریت فروشگاه‌ها',
-    icon: 'storefront',
+    icon: 'store',
     link: '/vendor'
   }
-]
-let ISA_VERSION: string | undefined
-if (process.env.VERSION) {
-  ISA_VERSION = process.env.VERSION
+])
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
 }
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  data () {
-    return {
-      ISA_VERSION,
-      leftDrawerOpen: false,
-      essentialLinks: linksList
-    }
-  },
-
-  methods: {
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
-    }
-  }
-})
 </script>
