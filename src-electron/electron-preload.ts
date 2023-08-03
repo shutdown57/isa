@@ -12,9 +12,11 @@ contextBridge.exposeInMainWorld('database', {
   async expense (method: string, params: any) {
     const expense = new Expense()
     if (method === 'all') {
-      await expense.all(params)
+      return await expense.all(params.limit, params.offset)
     } else if (method === 'create') {
       await expense.create(params)
+    } else if (method === 'count') {
+      return await expense.count()
     }
   },
 
@@ -63,6 +65,8 @@ contextBridge.exposeInMainWorld('database', {
       return await account.byId(parseInt(id))
     } else if (method === 'search') {
       return await account.search(params.needle)
+    } else if (method === 'amount') {
+      await account.amount(params)
     }
   },
 
