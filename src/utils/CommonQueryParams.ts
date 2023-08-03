@@ -1,7 +1,11 @@
 export class CommonQueryParams {
   private payload
   public constructor (payload: any) {
-    this.payload = payload
+    if (payload) {
+      this.payload = payload
+    } else {
+      this.payload = {}
+    }
   }
 
   get params () {
