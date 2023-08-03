@@ -20,6 +20,7 @@ model Account {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   invoices      Invoice[]
+  expenses      Expense[]
 }
 
 model Customer {
@@ -115,4 +116,6 @@ model Expense {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  accountId   Int?
+  account     Account? @relation(fields: [accountId], references: [id])
 }
