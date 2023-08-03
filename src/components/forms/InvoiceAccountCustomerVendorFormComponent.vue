@@ -88,9 +88,6 @@ import { Account } from 'src/interface/account'
 const props = defineProps<{invoice: Invoice}>()
 const store = useStore()
 
-// const emit = defineEmits<{(e: 'CustomerValue', selectedCustomer: SelectOption): void
-//   (e: 'VendorValue', selectedVendor: SelectOption): void
-//   (e: 'AccountValue', selectedAccount: SelectOption): void}>()
 const emit = defineEmits<{(e: 'SelectedValues', selectedValues: { customer?: SelectOption, vendor?: SelectOption, account?: SelectOption }): void}>()
 
 const buy = ref(false)
