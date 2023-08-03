@@ -9,6 +9,10 @@ const mutation: MutationTree<ExpenseStateInterface> = {
 
   EXPENSE (state: ExpenseStateInterface, data: Expense) {
     state.expense = data
+  },
+
+  COUNT (state: ExpenseStateInterface, data: number) {
+    state.count = data
   }
 }
 

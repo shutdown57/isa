@@ -23,6 +23,15 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
     } catch (err: any) {
       console.error(err)
     }
+  },
+
+  async count ({ commit }) {
+    try {
+      const data = await database.expense('count')
+      commit('COUNT', data)
+    } catch (err: any) {
+      console.error(err)
+    }
   }
 }
 
