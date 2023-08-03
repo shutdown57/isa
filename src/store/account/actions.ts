@@ -1,6 +1,7 @@
 import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { AccountStateInterface } from './state'
+import { AccountUpdateAmount } from 'src/interface/account'
 
 // @ts-ignore
 const { database } = window
@@ -33,6 +34,15 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async search (context, payload) {
     const data = await database.account('search', payload)
     context.commit('ACCOUNTS_SET', data)
+  },
+
+  async amount (context, payload: AccountUpdateAmount) {
+    try {
+      await database.account('amount', payload)
+      context.dispatch('getAccount', { id: payload.id })
+    } catch (err: any) {
+      console.error(err)
+    }
   }
 }
 

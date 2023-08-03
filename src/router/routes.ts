@@ -29,11 +29,21 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/product/EditPage.vue') }]
   },
 
-  // Customer
+  // Expense
   {
     path: '/expense',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/expense/IndexPage.vue') }]
+  },
+  {
+    path: '/expense/create',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/expense/CreatePage.vue') }]
+  },
+  {
+    path: '/expense/show/:expenseId',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/expense/ShowPage.vue') }]
   },
 
   // Customer
