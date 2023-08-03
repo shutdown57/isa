@@ -18,7 +18,8 @@ export class Expense {
   }
 
   async create (payload: ExpenseCreate) {
-    await this.prisma.expense.create({ data: payload })
+    const { amount } = payload
+    await this.prisma.expense.create({ data: { ...payload, amount: parseInt(`${amount}`) } })
   }
 
   async byId (id: number) {
@@ -43,5 +44,9 @@ export class Expense {
       take: 20,
       orderBy: { createdAt: 'desc' }
     })
+  }
+
+  async count() {
+    return await this.prisma.expense.count()
   }
 }
