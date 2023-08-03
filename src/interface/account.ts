@@ -28,3 +28,8 @@ export type AccountUpdate = {
   amount?: number
   accountNumber?: string
 }
+
+export type AccountUpdateAmount = {
+  id: number
+  amount: number
+}
