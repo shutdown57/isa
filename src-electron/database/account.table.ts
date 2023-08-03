@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-import { AccountCreate, AccountUpdate } from '../../src/interface/account'
+import { AccountCreate, AccountUpdate, AccountUpdateAmount } from '../../src/interface/account'
 
 export class Account {
   private prisma
@@ -44,6 +44,13 @@ export class Account {
       },
       take: 20,
       orderBy: { name: 'asc' }
+    })
+  }
+
+  async amount (payload: AccountUpdateAmount): Promise<void> {
+    await this.prisma.account.update({
+      where: { id: parseInt(`${payload.id}`) },
+      data: { amount: { increment: parseInt(`${payload.amount}`) } }
     })
   }
 }
