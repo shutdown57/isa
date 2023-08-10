@@ -17,6 +17,12 @@ contextBridge.exposeInMainWorld('database', {
       await expense.create(params)
     } else if (method === 'count') {
       return await expense.count()
+    } else if (method === 'remove') {
+      await expense.remove(params)
+    } else if (method === 'byId') {
+      return await expense.byId(params)
+    } else if (method === 'update') {
+      await expense.update(params)
     }
   },
 
