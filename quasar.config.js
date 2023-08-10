@@ -156,7 +156,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: 'ISA',
         short_name: 'ISA',
-        description: '',
+        description: 'An installment store accounting application',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
