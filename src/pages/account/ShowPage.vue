@@ -27,7 +27,6 @@
           <p>
             <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(account.updatedAt)) }}
           </p>
-          <!-- TODO: Add edit account -->
           <q-btn
             color="warning"
             label="ویرایش"
