@@ -26,11 +26,21 @@ export class Vendor {
     })
   }
 
-  async update(payload: VendorUpdate) {
+  async update (payload: VendorUpdate) {
     const { id, ...data } = payload
     await this.prisma.vendor.update({
       where: { id: parseInt(`${id}`) },
       data
+    })
+  }
+
+  async search (needle: string) {
+    return await this.prisma.vendor.findMany({
+      where: {
+        name: { contains: needle }
+      },
+      take: 20,
+      orderBy: { name: 'asc' }
     })
   }
 }
