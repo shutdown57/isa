@@ -2,7 +2,6 @@
   <q-card class="row justify-center">
     <q-card-section>
       <div class="q-gutter-md" style="min-width: 300px;max-width: 500px">
-        <!-- @filter="filterCustomer" -->
         <q-select
           v-if="!buy"
           v-model="customer"
@@ -15,6 +14,7 @@
           use-input
           outlined
           dense
+          @filter="filterCustomer"
         >
           <template #no-option>
             <q-item>
@@ -25,7 +25,6 @@
           </template>
         </q-select>
 
-        <!-- @filter="filterVendor" -->
         <q-select
           v-if="buy"
           v-model="vendor"
@@ -38,6 +37,7 @@
           use-input
           outlined
           dense
+          @filter="filterVendor"
         >
           <template #no-option>
             <q-item>
@@ -48,7 +48,6 @@
           </template>
         </q-select>
 
-        <!-- @filter="filterAccount" -->
         <q-select
           v-model="account"
           :label="`انتخاب حساب ${buy ? 'برداشت' : 'واریز'}`"
@@ -60,6 +59,7 @@
           use-input
           outlined
           dense
+          @filter="filterAccount"
         >
           <template v-slot:no-option>
             <q-item>
@@ -84,6 +84,7 @@ import { Customer } from 'src/interface/customer'
 import { Vendor } from 'src/interface/vendor'
 import { Invoice } from 'src/interface/invoice'
 import { Account } from 'src/interface/account'
+import { FilterSelect } from 'src/utils/Filters'
 
 const props = defineProps<{invoice: Invoice}>()
 const store = useStore()
@@ -100,6 +101,7 @@ const customer = computed({
     return selectedCustomer
   },
   set (value) {
+    if (!value) return
     selectedCustomer.id = value.id
     selectedCustomer.name = value.name
   }
@@ -109,6 +111,7 @@ const vendor = computed({
     return selectedVendor
   },
   set (value) {
+    if (!value) return
     selectedVendor.id = value.id
     selectedVendor.name = value.name
   }
@@ -118,6 +121,7 @@ const account = computed({
     return selectedAccount
   },
   set (value) {
+    if (!value) return
     selectedAccount.id = value.id
     selectedAccount.name = value.name
   }
@@ -156,4 +160,8 @@ const handler = () => {
   }
   emit('SelectedValues', selecteds)
 }
+
+const filterVendor = new FilterSelect('vendor/getVendors', 'vendor/search').create()
+const filterCustomer = new FilterSelect('customer/getCustomers', 'customer/search').create()
+const filterAccount = new FilterSelect('account/getAccounts', 'account/search').create()
 </script>
