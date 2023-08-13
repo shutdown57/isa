@@ -21,7 +21,6 @@
           <p>
             <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(vendor.updatedAt)) }}
           </p>
-          <!-- TODO: Add edit vendor -->
           <q-btn
             color="warning"
             label="ویرایش"
