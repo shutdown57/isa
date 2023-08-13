@@ -75,14 +75,15 @@ model Installment {
 }
 
 model Product {
-  id          Int                  @id @default(autoincrement())
-  name        String?
-  description String?
-  quantity    Int                  @default(0)
-  price       Int                  @default(0)
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-  invoices    InvoicesOnProducts[]
+  id            Int                  @id @default(autoincrement())
+  name          String?
+  description   String?
+  quantity      Int                  @default(0)
+  priceBuy      Int                  @default(0)
+  priceSell     Int                  @default(0)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  invoices      InvoicesOnProducts[]
 }
 
 model InvoicesOnProducts {
