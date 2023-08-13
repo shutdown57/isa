@@ -116,6 +116,8 @@ contextBridge.exposeInMainWorld('database', {
       return await vendor.byId(parseInt(id))
     } else if (method === 'update') {
       await vendor.update(params)
+    } else if (method === 'search') {
+      return await vendor.search(params.needle)
     }
   }
 })
