@@ -27,7 +27,6 @@
           <p>
             <strong>تاریخ بروزرسانی: </strong> {{ digitsEnToFa(datetime(customer.updatedAt)) }}
           </p>
-          <!-- TODO: Add edit customer -->
           <q-btn
             color="warning"
             label="ویرایش"
