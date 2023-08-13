@@ -9,16 +9,15 @@ export class Product {
     this.prisma = new PrismaClient()
   }
 
-  async all(limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit: number = 20, offset: number = 0): Promise<any> {
     return await this.prisma.product.findMany({ skip: offset, take: limit, orderBy: { name: 'asc' } })
   }
 
-  async create(payload: ProductCreate) {
+  async create (payload: ProductCreate) {
     await this.prisma.product.create({ data: payload })
   }
 
-  async update(payload: ProductUpdate) {
-    console.log(payload)
+  async update (payload: ProductUpdate) {
     const { id, ...data } = payload
     await this.prisma.product.update({
       where: { id },
@@ -26,7 +25,7 @@ export class Product {
     })
   }
 
-  async byId(id: number) {
+  async byId (id: number) {
     return await this.prisma.product.findUnique({
       where: { id },
       include: {
@@ -35,7 +34,7 @@ export class Product {
     })
   }
 
-  async search(needle: string) {
+  async search (needle: string) {
     return await this.prisma.product.findMany({
       where: {
         name: { contains: needle }
