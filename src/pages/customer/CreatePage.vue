@@ -7,6 +7,33 @@
           <q-input outlined dense v-model="phone" label="شماره تلفن" />
           <q-input outlined dense v-model="address" label="آدرس" type="textarea" />
           <q-input outlined dense v-model="description" label="توضیحات" type="textarea" />
+
+          <q-select
+            v-model="customer"
+            :options="customers"
+            option-value="id"
+            option-label="name"
+            input-debounce="700"
+            label="انتخاب معرف"
+            behavior="menu"
+            use-input
+            outlined
+            dense
+            @filter="filterCustomer"
+          >
+            <template #no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No results
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <template v-if="customer" v-slot:append>
+              <q-icon name="cancel" @click.stop.prevent="customer = { id: null, name: '' }" class="cursor-pointer" />
+            </template>
+          </q-select>
+
           <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateCustomer" />
         </div>
       </q-card-section>
@@ -30,38 +57,56 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useStore } from 'src/store'
+import { useRouter } from 'vue-router'
+import { Customer } from 'src/interface/customer'
+import { FilterSelect } from 'src/utils/Filters'
 
-export default defineComponent({
-  name: 'CustomerCreatePage',
-  data () {
-    return {
-      name: '',
-      phone: '',
-      address: '',
-      description: '',
-      alert: false
-    }
+const store = useStore()
+const router = useRouter()
+
+const name = ref('')
+const phone = ref('')
+const address = ref('')
+const description = ref('')
+const alert = ref(false)
+
+const selectedCustomer = reactive({ id: null, name: '' })
+
+const customers = computed<Array<Customer>>(() => store.getters['customer/customers'])
+const customer = computed({
+  get () {
+    return selectedCustomer
   },
-
-  methods: {
-    async handleCreateCustomer () {
-      if (!this.name || !this.phone) {
-        this.alert = true
-        return false
-      }
-
-      const product = {
-        name: this.name,
-        phone: this.phone,
-        address: this.address,
-        description: this.description
-      }
-
-      await this.$store.dispatch('customer/createCustomer', product)
-      this.$router.push({ path: '/customer' })
-    }
+  set (value) {
+    if (!value) return
+    selectedCustomer.id = value.id
+    selectedCustomer.name = value.name
   }
 })
+
+onMounted(async () => {
+  await store.dispatch('customer/getCustomers')
+})
+
+const handleCreateCustomer = async () => {
+  if (!name.value || !phone.value) {
+    alert.value = true
+    return false
+  }
+
+  const product = {
+    name: name.value,
+    phone: phone.value,
+    address: address.value,
+    description: description.value
+  }
+
+  await store.dispatch('customer/createCustomer', product)
+  router.push({ path: '/customer' })
+}
+
+const filterCustomer = new FilterSelect('customer/getCustomers', 'customer/search').create()
 </script>
