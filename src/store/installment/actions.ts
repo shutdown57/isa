@@ -6,19 +6,19 @@ import { InstallmentStateInterface } from './state'
 const { database } = window
 
 const actions: ActionTree<InstallmentStateInterface, StateInterface> = {
-  async setInstallment (context, payload) {
+  async setInstallment (context, payload): Promise<void> {
     try {
       const data = await database.installment('create', payload)
       context.commit('INSTALLMENT_SET', data)
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
 
-  async update (_, payload) {
+  async update (_, payload): Promise<void> {
     try {
       await database.installment('update', payload)
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
     }
   }

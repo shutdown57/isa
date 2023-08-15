@@ -6,7 +6,7 @@ import { ProductStateInterface } from './state'
 const { database } = window
 
 const actions: ActionTree<ProductStateInterface, StateInterface> = {
-  async getProducts (context, payload = {}) {
+  async getProducts (context, payload = {}): Promise<void> {
     if (!('limit' in payload)) {
       payload.limit = 20
     }
@@ -17,21 +17,21 @@ const actions: ActionTree<ProductStateInterface, StateInterface> = {
     context.commit('PRODUCTS_SET', data)
   },
 
-  async createProduct (_, payload) {
+  async createProduct (_, payload): Promise<void> {
     await database.product('create', payload)
   },
 
-  async getProduct (context, payload) {
+  async getProduct (context, payload): Promise<void> {
     const data = await database.product('byId', payload)
     context.commit('PRODUCT_SET', data)
   },
 
-  async search (context, payload) {
+  async search (context, payload): Promise<void> {
     const data = await database.product('search', payload)
     context.commit('PRODUCTS_SET', data)
   },
 
-  async update (_, payload) {
+  async update (_, payload): Promise<void> {
     await database.product('update', payload)
   }
 }

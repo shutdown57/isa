@@ -6,7 +6,7 @@ import { InvoiceStateInterface } from './state'
 const { database } = window
 
 const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
-  async getSellInvoices (context, payload = {}) {
+  async getSellInvoices (context, payload = {}): Promise<void> {
     if (!('limit' in payload)) {
       payload.limit = 20
     }
@@ -20,7 +20,7 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
     context.commit('INVOICES_SET', data)
   },
 
-  async getBuyInvoices (context, payload = {}) {
+  async getBuyInvoices (context, payload = {}): Promise<void> {
     if (!('limit' in payload)) {
       payload.limit = 20
     }
@@ -34,17 +34,17 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
     context.commit('INVOICES_SET', data)
   },
 
-  async createInvoice (context, payload) {
+  async createInvoice (context, payload): Promise<void> {
     const data = await database.invoice('create', payload)
     context.commit('INVOICE_SET', data)
   },
 
-  async getInvoice (context, payload) {
+  async getInvoice (context, payload): Promise<void> {
     const data = await database.invoice('byId', payload)
     context.commit('INVOICE_SET', data)
   },
 
-  async updateInvoice (context, payload) {
+  async updateInvoice (context, payload): Promise<void> {
     await database.invoice('update', payload)
     const { id } = payload
     await context.dispatch('getInvoice', { id: parseInt(id) })
@@ -59,14 +59,6 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
       installmentQuantity: JSON.parse(JSON.stringify(payload.installmentQuantity)),
       installment: JSON.parse(JSON.stringify(payload.installment))
     })
-  },
-
-  async productAdd (context, payload): Promise<void> {
-    context.commit('INVOICE_PRODUCTS_ADD', payload)
-  },
-
-  async productRemove (context, payload): Promise<void> {
-    context.commit('INVOICE_PRODUCTS_REMOVE', payload)
   },
 
   async count (context, payload): Promise<void> {

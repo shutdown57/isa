@@ -13,7 +13,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
       const cqp = new CommonQueryParams(payload)
       const data = await database.expense('all', cqp.params)
       commit('EXPENSES', data)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
@@ -22,7 +22,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
     try {
       const data = await database.expense('byId', payload)
       commit('EXPENSE', data)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
@@ -30,7 +30,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
   async create (_, payload: ExpenseCreate): Promise<void> {
     try {
       await database.expense('create', payload)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
@@ -39,7 +39,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
     try {
       const data = await database.expense('count')
       commit('COUNT', data)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
@@ -47,7 +47,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
   async remove (_, payload: ExpenseDelete): Promise<void> {
     try {
       await database.expense('remove', payload)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   },
@@ -55,7 +55,7 @@ const actions: ActionTree<ExpenseStateInterface, StateInterface> = {
   async update (_, payload): Promise<void> {
     try {
       await database.expense('update', payload)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   }

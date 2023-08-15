@@ -6,7 +6,7 @@ import { CustomerStateInterface } from './state'
 const { database } = window
 
 const actions: ActionTree<CustomerStateInterface, StateInterface> = {
-  async getCustomers (context, payload = {}) {
+  async getCustomers (context, payload = {}): Promise<void> {
     if (!('limit' in payload)) {
       payload.limit = 20
     }

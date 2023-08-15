@@ -7,7 +7,7 @@ import { AccountUpdateAmount } from 'src/interface/account'
 const { database } = window
 
 const actions: ActionTree<AccountStateInterface, StateInterface> = {
-  async getAccounts (context, payload = {}) {
+  async getAccounts (context, payload = {}): Promise<void> {
     if (!('limit' in payload)) {
       payload.limit = 20
     }
@@ -18,29 +18,29 @@ const actions: ActionTree<AccountStateInterface, StateInterface> = {
     context.commit('ACCOUNTS_SET', data)
   },
 
-  async createAccount (_, payload) {
+  async createAccount (_, payload): Promise<void> {
     await database.account('create', payload)
   },
 
-  async updateAccount (_, payload) {
+  async updateAccount (_, payload): Promise<void> {
     await database.account('update', payload)
   },
 
-  async getAccount (context, payload) {
+  async getAccount (context, payload): Promise<void> {
     const data = await database.account('byId', payload)
     context.commit('ACCOUNT_SET', data)
   },
 
-  async search (context, payload) {
+  async search (context, payload): Promise<void> {
     const data = await database.account('search', payload)
     context.commit('ACCOUNTS_SET', data)
   },
 
-  async amount (context, payload: AccountUpdateAmount) {
+  async amount (context, payload: AccountUpdateAmount): Promise<void> {
     try {
       await database.account('amount', payload)
       context.dispatch('getAccount', { id: payload.id })
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   }
