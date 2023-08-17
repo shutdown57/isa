@@ -102,6 +102,7 @@ const handleCreateInvoice = async ($event?: Invoice) => {
       id: invoice.value.id,
       ...$event
     })
+    // FIXME: Error [vuex] unknown action type: installment/setInstallments
     await store.dispatch('installment/setInstallments')
   } else {
     await store.dispatch('invoice/createInvoice', $event)
@@ -124,9 +125,9 @@ const handleValues = async (
     vendorId: $event?.vendor?.id ? $event.vendor.id : undefined
   }
   await store.dispatch('invoice/updateInvoice', payload)
-  await store.dispatch('installment/setInstallments', {
-    id: invoice.value.id
-  })
+  // await store.dispatch('installment/setInstallments', {
+  //   id: invoice.value.id
+  // })
   step.value = 3
 }
 
