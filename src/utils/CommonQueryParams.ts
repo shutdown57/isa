@@ -1,6 +1,11 @@
+type Payload = {
+  limit?: number
+  offset?: number
+}
+
 export class CommonQueryParams {
   private payload
-  public constructor (payload: any) {
+  public constructor (payload: Payload) {
     if (payload) {
       this.payload = payload
     } else {
