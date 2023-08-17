@@ -7,7 +7,6 @@
           <q-input outlined dense v-model="description" label="توضیحات محصول" type="textarea" />
           <q-input outlined dense v-model="priceBuy" label="قیمت خرید محصول" />
           <q-input outlined dense v-model="priceSell" label="قیمت فروش محصول" />
-          <q-input outlined dense v-model="quantity" label="تعداد محصول" />
           <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateProduct" />
         </div>
       </q-card-section>
@@ -54,9 +53,9 @@ const handleCreateProduct = async () => {
   const product = {
     name: name.value,
     description: description.value,
-    priceBuy: priceBuy.value || 0,
-    priceSell: priceSell.value || 0,
-    quantity: quantity.value || 0
+    priceBuy: +priceBuy.value || 0,
+    priceSell: +priceSell.value || 0,
+    quantity: +quantity.value || 0
   }
 
   await store.dispatch('product/createProduct', product)

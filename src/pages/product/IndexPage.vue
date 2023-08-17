@@ -17,7 +17,8 @@
             <tr>
               <th class="text-center">کد</th>
               <th class="text-center">نام</th>
-              <th class="text-center">قیمت</th>
+              <th class="text-center">قیمت خرید</th>
+              <th class="text-center">قیمت فروش</th>
               <th class="text-center">تعداد</th>
               <th class="text-center">تاریخ ایجاد</th>
               <th class="text-center">تاریخ بروزرسانی</th>
@@ -28,7 +29,8 @@
             <tr v-for="product in products" :key="product.id">
               <td class="text-center">{{ digitsEnToFa(product.id) }}</td>
               <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.price}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.priceBuy}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.priceSell}`)) }}</td>
               <td class="text-center">{{ digitsEnToFa(String(product.quantity)) }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(product.createdAt)) }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(product.updatedAt)) }}</td>

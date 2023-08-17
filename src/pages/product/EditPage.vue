@@ -5,8 +5,8 @@
         <div class="q-gutter-md" style="min-width: 300px;max-width: 500px">
           <q-input outlined dense v-model="name" label="نام محصول" />
           <q-input outlined dense v-model="description" label="توضیحات محصول" type="textarea" />
-          <q-input outlined dense v-model="price" label="قیمت مصحول" />
-          <q-input outlined dense v-model="quantity" label="تعداد محصول" />
+          <q-input outlined dense v-model="priceBuy" label="قیمت خرید محصول" />
+          <q-input outlined dense v-model="priceSell" label="قیمت فروش محصول" />
           <q-btn color="secondary" label="ثبت" @click.prevent="handleUpdateProduct" />
         </div>
       </q-card-section>
@@ -41,8 +41,9 @@ const router = useRouter()
 
 const name = ref('')
 const description = ref('')
-const price = ref('')
-const quantity = ref('')
+const priceBuy = ref(0)
+const priceSell = ref(0)
+const quantity = ref(0)
 const alert = ref(false)
 
 const product = computed(() => store.getters['product/product'])
@@ -51,8 +52,9 @@ onMounted(async () => {
   await store.dispatch('product/getProduct', { id: route.params.productId })
   name.value = product.value.name
   description.value = product.value.description
-  price.value = product.value.price
-  quantity.value = product.value.quantity
+  priceBuy.value = +product.value.priceBuy
+  priceSell.value = +product.value.priceSell
+  quantity.value = +product.value.quantity
 })
 
 const handleUpdateProduct = async () => {
@@ -64,8 +66,9 @@ const handleUpdateProduct = async () => {
     id: product.value.id,
     name: name.value,
     description: description.value,
-    price: parseInt(price.value || '0'),
-    quantity: parseInt(quantity.value || '0')
+    priceBuy: +priceBuy.value || 0,
+    priceSell: +priceSell.value || 0,
+    quantity: +quantity.value || 0
   }
 
   await store.dispatch('product/update', payload)

@@ -10,7 +10,10 @@
             <strong>نام: </strong> {{ product.name }}
           </p>
           <p>
-            <strong>قیمت: </strong> {{ digitsEnToFa(addCommas(product.price)) }}
+            <strong>قیمت خرید: </strong> {{ digitsEnToFa(addCommas(product.priceBuy)) }}
+          </p>
+          <p>
+            <strong>قیمت فروش: </strong> {{ digitsEnToFa(addCommas(product.priceSell)) }}
           </p>
           <p>
             <strong>تعداد: </strong> {{ digitsEnToFa(String(product.quantity)) }}
@@ -30,6 +33,12 @@
             @click.prevent="() => router.push({ path: `/product/show/${product.id}/edit` })"
           />
         </div>
+      </q-card-section>
+    </q-card>
+
+    <q-card class="row justify-center">
+      <q-card-section>
+        A table to show invoices
       </q-card-section>
     </q-card>
   </q-page>
