@@ -101,7 +101,7 @@ const handleAddProduct = async () => {
     prepayment: invoice.prepayment?.value,
     installment: invoice.installment?.value,
     installmentQuantity: invoice.installmentQuantity?.value,
-    products: products
+    products
   })
   let totalAmount = 0
   products.forEach(v => { totalAmount += (parseInt(`${v.price || '0'}`) * parseInt(`${v.quantity || '0'}`)) })
