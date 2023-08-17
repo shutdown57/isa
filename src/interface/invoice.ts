@@ -1,6 +1,6 @@
 import { InvoiceOnProduct, ProductRow } from './product'
 import { Customer } from './customer'
-import { Installment, InstallmentCreate } from './installment'
+import { Installment } from './installment'
 import { Account } from './account'
 import { Vendor } from './vendor'
 
