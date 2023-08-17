@@ -135,7 +135,7 @@ const handleRemove = async (expense: Expense) => {
   const { id, amount, accountId } = expense
   await store.dispatch('account/amount', {
     id: accountId,
-    amount: amount
+    amount
   })
   await store.dispatch('expense/remove', id)
   await fetchData()
