@@ -24,7 +24,7 @@ export class FilterSelect {
         update(async () => {
           await this.store.dispatch(this.storeGet)
         })
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err)
       }
     }
