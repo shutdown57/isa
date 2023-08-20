@@ -7,8 +7,16 @@ import { Invoice } from './database/invoice.table'
 import { Installment } from './database/installment.table'
 import { Vendor } from './database/vendor.table'
 import { Expense } from './database/expense.table'
+import { InvoiceOnProduct } from './database/invoiceOnProduct.table'
 
 contextBridge.exposeInMainWorld('database', {
+  async invoiceOnProduct (method: string, params: any) {
+    const iop = new InvoiceOnProduct()
+    if (method === 'all') {
+      return await iop.all(params.limit, params.offset, params.buy)
+    }
+  },
+
   async expense (method: string, params: any) {
     const expense = new Expense()
     if (method === 'all') {
@@ -39,6 +47,8 @@ contextBridge.exposeInMainWorld('database', {
       return await product.search(params.needle)
     } else if (method === 'update') {
       await product.update(params)
+    } else if (method === 'count') {
+      await product.count()
     }
   },
 
