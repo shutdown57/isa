@@ -10,7 +10,11 @@ export class Product {
   }
 
   async all (limit: number = 20, offset: number = 0): Promise<any> {
-    return await this.prisma.product.findMany({ skip: offset, take: limit, orderBy: { name: 'asc' } })
+    return await this.prisma.product.findMany({
+      skip: offset,
+      take: limit,
+      orderBy: { name: 'asc' }
+    })
   }
 
   async create (payload: ProductCreate) {
@@ -42,5 +46,9 @@ export class Product {
       take: 20,
       orderBy: { name: 'asc' }
     })
+  }
+
+  async count (): Promise<number> {
+    return await this.prisma.product.count()
   }
 }
