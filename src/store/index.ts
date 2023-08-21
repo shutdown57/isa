@@ -13,6 +13,7 @@ import invoice from './invoice'
 import vendor from './vendor'
 import installment from './installment'
 import expense from './expense'
+import invoiceOnProduct from './invoiceOnProduct'
 import { ProductStateInterface } from './product/state'
 import { CustomerStateInterface } from './customer/state'
 import { AccountStateInterface } from './account/state'
@@ -20,6 +21,7 @@ import { InvoiceStateInterface } from './invoice/state'
 import { VendorStateInterface } from './vendor/state'
 import { InstallmentStateInterface } from './installment/state'
 import { ExpenseStateInterface } from './expense/state'
+import { InvoiceOnProductStateInterface } from './invoiceOnProduct/state'
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -44,7 +46,8 @@ export interface StateInterface {
   invoice: InvoiceStateInterface,
   vendor: VendorStateInterface,
   installment: InstallmentStateInterface,
-  expense: ExpenseStateInterface
+  expense: ExpenseStateInterface,
+  invoiceOnProduct: InvoiceOnProductStateInterface
 }
 
 // provide typings for `this.$store`
@@ -73,7 +76,8 @@ export default store(function (/* { ssrContext } */) {
       invoice,
       vendor,
       installment,
-      expense
+      expense,
+      invoiceOnProduct
     },
 
     // enable strict mode (adds overhead!)
