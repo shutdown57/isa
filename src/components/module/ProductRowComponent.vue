@@ -3,7 +3,6 @@
     <div class="col-1" v-text="digitsEnToFa(`${(props.index ?? 1) + 1}`)"></div>
 
     <div class="col-6">
-        <!-- @filter="filterProduct" -->
       <q-select
         v-model="product"
         :options="products"
@@ -15,6 +14,7 @@
         use-input
         outlined
         dense
+        @filter="filterProduct"
       >
         <template #no-option>
           <q-item>
@@ -59,6 +59,7 @@ import { addCommas, digitsEnToFa } from 'src/boot/persianTools'
 import { ProductRow, SelectedPrice, SelectedQuantity } from 'src/interface/product'
 import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
+import { FilterSelect } from 'src/utils/Filters'
 
 const props = defineProps<{product: ProductRow, index: number}>()
 
@@ -69,13 +70,11 @@ const emit = defineEmits<{(e: 'RowDelete', index: number): void
   (e: 'QuantityValue', { quantity, index }: SelectedQuantity): void
   (e: 'ProductValue', { id, index }: ProductRow): void}>()
 
-const amount = computed(() => (props.product?.price ?? 0) * (props.product?.quantity ?? 0))
-const products = computed(() => {
-  return store.getters['product/products']
-})
+const amount = computed(() => (props.product?.priceSell ?? 0) * (props.product?.quantity ?? 0))
+const products = computed(() => store.getters['product/products'])
 const price = computed({
   get () {
-    return props.product?.price
+    return props.product?.priceSell
   },
   set (value) {
     if (!value) value = 0
@@ -113,9 +112,10 @@ const product = computed({
       name: p.name,
       index: props.index
     }
+    console.log(p, price.value)
     emit('ProductValue', payload)
     if (price.value) return false
-    price.value = p.price ?? 0
+    price.value = p.priceSell ?? 0
     if (quantity.value) return false
     quantity.value = 1
   }
@@ -132,4 +132,6 @@ const fetchData = async (): Promise<void> => {
 const remove = () => {
   emit('RowDelete', props.index)
 }
+
+const filterProduct = new FilterSelect('product/getProducts', 'product/search').create()
 </script>
