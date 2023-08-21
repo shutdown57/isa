@@ -5,15 +5,18 @@ import { ProductCreate, ProductUpdate } from 'src/interface/product'
 export class Product {
   private prisma
 
-  constructor() {
+  constructor () {
     this.prisma = new PrismaClient()
   }
 
-  async all (limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0): Promise<any> {
     return await this.prisma.product.findMany({
       skip: offset,
       take: limit,
-      orderBy: { name: 'asc' }
+      orderBy: { name: 'asc' },
+      include: {
+        price: true
+      }
     })
   }
 
