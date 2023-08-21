@@ -1,16 +1,16 @@
 import { PrismaClient } from '@prisma/client'
 import { ProductRow } from 'src/interface/product'
 
-import { InvoiceCreate, InvoiceInstallment, InvoiceProduct, InvoiceUpdate } from '../../src/interface/invoice'
+import { InvoiceCreate, InvoiceInstallment, InvoiceUpdate } from 'src/interface/invoice'
 
 export class Invoice {
   private prisma
 
-  constructor() {
+  constructor () {
     this.prisma = new PrismaClient()
   }
 
-  async count(buy: boolean | null) {
+  async count (buy: boolean | null) {
     if (buy === null) {
       return await this.prisma.invoice.count()
     } else if (buy) {
@@ -19,44 +19,38 @@ export class Invoice {
     return await this.prisma.invoice.count({ where: { buy: false } })
   }
 
-  async all(limit: number = 20, offset: number = 0, buy: boolean = false): Promise<any> {
-    return await this
-      .prisma
-      .invoice
-      .findMany({
-        skip: offset,
-        take: limit,
-        where: { buy },
-        orderBy: { customer: { name: 'asc' } },
-        include: {
-          customer: true
-        }
-      })
+  async all (limit: number = 20, offset: number = 0, buy: boolean = false): Promise<any> {
+    return await this.prisma.invoice.findMany({
+      skip: offset,
+      take: limit,
+      where: { buy },
+      orderBy: { customer: { name: 'asc' } },
+      include: {
+        customer: true
+      }
+    })
   }
 
-  async create(payload: InvoiceCreate) {
+  async create (payload: InvoiceCreate) {
     return await this.prisma.invoice.create({
       data: payload
     })
   }
 
-  async byId(id: number) {
-    return await this
-      .prisma
-      .invoice
-      .findFirst({
-        where: { id },
-        include: {
-          products: { include: { product: true } },
-          customer: true,
-          vendor: true,
-          account: true,
-          installments: true
-        }
-      })
+  async byId (id: number) {
+    return await this.prisma.invoice.findFirst({
+      where: { id },
+      include: {
+        products: { include: { product: true } },
+        customer: true,
+        vendor: true,
+        account: true,
+        installments: true
+      }
+    })
   }
 
-  async update(payload: InvoiceUpdate) {
+  async update (payload: InvoiceUpdate) {
     const { id } = payload
     if (payload.buy) {
       await this.prisma.invoice.update({
@@ -93,7 +87,7 @@ export class Invoice {
     }
   }
 
-  async upsertProducts(payload: InvoiceInstallment) {
+  async upsertProducts (payload: InvoiceInstallment) {
     const { id } = payload
     await this.prisma.invoice.update({
       where: { id },
@@ -117,10 +111,15 @@ export class Invoice {
     })
 
     if (payload.installment) {
+      const totlAmount = payload.products.reduce(
+        (a, c: ProductRow) => a + (parseInt(`${c.price || 0}`) * parseInt(`${c.quantity || 0}`)),
+        0
+      )
       const installments = []
       const prepayment = parseInt(`${payload.prepayment ?? '0'}`)
+      const remainded = totlAmount - prepayment
       const count = payload.installmentQuantity ?? 1
-      const amount = prepayment / count
+      const amount = remainded / count
       for (let i = 0; i < count; i++) {
         installments.push({ paid: false, amount })
       }
