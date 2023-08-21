@@ -1,8 +1,9 @@
-import { InvoiceOnProduct, ProductRow } from './product'
+import { ProductRow } from './product'
 import { Customer } from './customer'
 import { Installment } from './installment'
 import { Account } from './account'
 import { Vendor } from './vendor'
+import { InvoiceOnProduct } from './invoiceOnProduct'
 
 export type Invoice = {
   id?: number
