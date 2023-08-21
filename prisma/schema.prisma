@@ -75,13 +75,14 @@ model Installment {
 }
 
 model Product {
-  id            Int                  @id @default(autoincrement())
-  name          String?
-  description   String?
-  quantity      Int                  @default(0)
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  invoices      InvoicesOnProducts[]
+  id          Int                  @id @default(autoincrement())
+  name        String?
+  description String?
+  quantity    Int                  @default(0)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  invoices    InvoicesOnProducts[]
+  price       Price?
 }
 
 model InvoicesOnProducts {
@@ -117,4 +118,13 @@ model Expense {
   updatedAt   DateTime @updatedAt
   accountId   Int?
   account     Account? @relation(fields: [accountId], references: [id])
+}
+
+model Price {
+  id        Int      @id @default(autoincrement())
+  productId Int?     @unique
+  product   Product? @relation(fields: [productId], references: [id])
+  buy       BigInt?  @default(0)
+  sell      BigInt?  @default(0)
+  percent   Int      @default(0)
 }
