@@ -5,8 +5,6 @@
         <div class="q-gutter-md" style="min-width: 300px;max-width: 500px">
           <q-input outlined dense v-model="name" label="نام محصول" />
           <q-input outlined dense v-model="description" label="توضیحات محصول" type="textarea" />
-          <q-input outlined dense v-model="priceBuy" label="قیمت خرید محصول" />
-          <q-input outlined dense v-model="priceSell" label="قیمت فروش محصول" />
           <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateProduct" />
         </div>
       </q-card-section>
@@ -40,8 +38,6 @@ const router = useRouter()
 
 const name = ref('')
 const description = ref('')
-const priceBuy = ref(0)
-const priceSell = ref(0)
 const quantity = ref(0)
 const alert = ref(false)
 
@@ -53,8 +49,6 @@ const handleCreateProduct = async () => {
   const product = {
     name: name.value,
     description: description.value,
-    priceBuy: +priceBuy.value || 0,
-    priceSell: +priceSell.value || 0,
     quantity: +quantity.value || 0
   }
 
