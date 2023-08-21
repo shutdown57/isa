@@ -1,14 +1,15 @@
 import { Invoice } from './invoice'
+import { Price } from './price'
 
 export type Product = {
   id?: number
   name: string
   description?: string
   quantity?: number
-  price?: number
   createdAt?: Date
   updatedAt?: Date
   invoices?: Invoice
+  price?: Price
 }
 
 export type ProductUpdate = {
@@ -16,14 +17,12 @@ export type ProductUpdate = {
   name: string
   description?: string
   quantity?: number
-  price?: number
 }
 
 export type ProductCreate = {
   name: string
   description?: string
   quantity?: number
-  price?: number
 }
 
 export type ProductSelect = {
@@ -50,20 +49,8 @@ export type SelectedPrice = {
 export type ProductRow = {
   index?: number
   id?: number
-  price?: number
   name?: string
   description?: string
   quantity?: number
-}
-
-export type InvoiceOnProduct = {
-  id: number
-  price: number
-  quantity: number
-  description?: string
-  createdAt?: Date
-  updatedAt?: Date
-  invoiceId: Invoice
-  productId: Product
-  product: Product
+  price?: number
 }
