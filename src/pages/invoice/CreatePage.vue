@@ -26,14 +26,6 @@
       </q-step>
     </q-stepper>
 
-    <!-- <q-card v-if="invoice && invoice.id" class="justify-center"> -->
-    <!--   <q-card-section> -->
-    <!--     <div class="q-gutter-md column"> -->
-    <!--       <ProductsComponent :invoice="invoice" /> -->
-    <!--     </div> -->
-    <!--   </q-card-section> -->
-    <!-- </q-card> -->
-
     <q-dialog v-model="alert" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-red text-white" style="width: 300px">
         <q-card-section>
@@ -86,6 +78,7 @@ const fetchData = async () => {
     await store.dispatch('invoice/getInvoice', { id })
   }
   await store.dispatch('customer/getCustomers')
+  await store.dispatch('vendor/getVendors')
   await store.dispatch('account/getAccounts')
 }
 
@@ -102,7 +95,6 @@ const handleCreateInvoice = async ($event?: Invoice) => {
       id: invoice.value.id,
       ...$event
     })
-    // FIXME: Error [vuex] unknown action type: installment/setInstallments
     await store.dispatch('installment/setInstallments')
   } else {
     await store.dispatch('invoice/createInvoice', $event)
