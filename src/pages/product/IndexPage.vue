@@ -29,8 +29,8 @@
             <tr v-for="product in products" :key="product.id">
               <td class="text-center">{{ digitsEnToFa(product.id) }}</td>
               <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.priceBuy}`)) }}</td>
-              <td class="text-center">{{ digitsEnToFa(addCommas(`${product.priceSell}`)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(String(product?.price?.buy ?? 0)) }}</td>
+              <td class="text-center">{{ digitsEnToFa(String(product?.price?.sell ?? 0)) }}</td>
               <td class="text-center">{{ digitsEnToFa(String(product.quantity)) }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(product.createdAt)) }}</td>
               <td class="text-center">{{ digitsEnToFa(datetime(product.updatedAt)) }}</td>
@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
-import { digitsEnToFa, addCommas } from 'src/boot/persianTools'
+import { digitsEnToFa } from 'src/boot/persianTools'
 import { datetime } from 'src/boot/jalaali'
 import { useRouter } from 'vue-router'
 
@@ -61,7 +61,7 @@ const router = useRouter()
 
 const products = computed(() => store.getters['product/products'])
 
-onMounted(() => store.dispatch('product/getProducts'))
+onMounted(() => { store.dispatch('product/getProducts') })
 
 const routeToShowPage = (id: number) => {
   router.push({ path: `/product/show/${id}` })
