@@ -95,7 +95,6 @@ const handleCreateInvoice = async ($event?: Invoice) => {
       id: invoice.value.id,
       ...$event
     })
-    await store.dispatch('installment/setInstallments')
   } else {
     await store.dispatch('invoice/createInvoice', $event)
   }
@@ -112,14 +111,12 @@ const handleValues = async (
 ) => {
   const payload = {
     id: invoice.value.id,
+    buy: invoice.value.buy,
     accountId: $event?.account?.id ? $event.account.id : undefined,
     customerId: $event?.customer?.id ? $event.customer.id : undefined,
     vendorId: $event?.vendor?.id ? $event.vendor.id : undefined
   }
   await store.dispatch('invoice/updateInvoice', payload)
-  // await store.dispatch('installment/setInstallments', {
-  //   id: invoice.value.id
-  // })
   step.value = 3
 }
 
@@ -127,6 +124,7 @@ const handleTotalAmount = async ($event?: number) => {
   if (!$event) return
   await store.dispatch('invoice/updateInvoice', {
     id: invoice.value.id,
+    buy: invoice.value.buy,
     totalAmount: $event
   })
   router.push({ path: `/invoice/show/${invoice.value.id}` })
