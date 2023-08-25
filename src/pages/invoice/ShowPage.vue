@@ -116,7 +116,7 @@
           <tbody>
             <tr v-for="(product, index) in invoice.products" :key="product.id">
               <td class="text-center">{{ digitsEnToFa(index + 1) }}</td>
-              <td class="text-center">{{ product?.product.name }}</td>
+              <td class="text-center">{{ product?.product?.name }}</td>
               <td>{{ product.description ?? '----' }}</td>
               <td class="text-center">{{ digitsEnToFa(`${product.quantity}`) }}</td>
               <td class="text-center">{{ digitsEnToFa(addCommas(product.price?.toString() || '')) }}</td>
@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { InvoiceOnProduct } from 'src/interface/product'
+import { InvoiceOnProduct } from 'src/interface/invoiceOnProduct'
 import { Installment } from 'src/interface/installment'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'src/store'
