@@ -5,6 +5,7 @@
       :key="`${invoice.id}-${index}`"
       :index="index"
       :product="product"
+      :is-buy="invoice.buy"
       @row-delete="handleRowDelete"
       @price-value="handlePriceValue"
       @product-value="handleProductValue"
