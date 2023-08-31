@@ -7,32 +7,61 @@ const { database } = window
 
 const actions: ActionTree<ProductStateInterface, StateInterface> = {
   async getProducts (context, payload = {}): Promise<void> {
-    if (!('limit' in payload)) {
-      payload.limit = 20
+    try {
+      if (!('limit' in payload)) {
+        payload.limit = 20
+      }
+      if (!('offset' in payload)) {
+        payload.offset = 0
+      }
+      const data = await database.product('all', payload)
+      context.commit('PRODUCTS_SET', data)
+    } catch (err: unknown) {
+      console.error(err)
     }
-    if (!('offset' in payload)) {
-      payload.offset = 0
-    }
-    const data = await database.product('all', payload)
-    context.commit('PRODUCTS_SET', data)
   },
 
-  async createProduct (_, payload): Promise<void> {
-    await database.product('create', payload)
+  async createProduct ({ commit }, payload): Promise<void> {
+    try {
+      const data = await database.product('create', payload)
+      commit('PRODUCT_SET', data)
+    } catch (err: unknown) {
+      console.error(err)
+    }
   },
 
   async getProduct (context, payload): Promise<void> {
-    const data = await database.product('byId', payload)
-    context.commit('PRODUCT_SET', data)
+    try {
+      const data = await database.product('byId', payload)
+      context.commit('PRODUCT_SET', data)
+    } catch (err: unknown) {
+      console.error(err)
+    }
   },
 
   async search (context, payload): Promise<void> {
-    const data = await database.product('search', payload)
-    context.commit('PRODUCTS_SET', data)
+    try {
+      const data = await database.product('search', payload)
+      context.commit('PRODUCTS_SET', data)
+    } catch (err: unknown) {
+      console.error(err)
+    }
   },
 
   async update (_, payload): Promise<void> {
-    await database.product('update', payload)
+    try {
+      await database.product('update', payload)
+    } catch (err: unknown) {
+      console.error(err)
+    }
+  },
+
+  async quantity (_, payload): Promise<void> {
+    try {
+      await database.product('quantity', payload)
+    } catch (err: unknown) {
+      console.error(err)
+    }
   }
 }
 
