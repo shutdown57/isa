@@ -9,7 +9,7 @@ export class Vendor {
     this.prisma = new PrismaClient()
   }
 
-  async all (limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0) {
     return await this.prisma.vendor.findMany({ skip: offset, take: limit, orderBy: { name: 'asc' } })
   }
 
