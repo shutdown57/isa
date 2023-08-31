@@ -43,7 +43,7 @@ export type SelectedQuantity = {
 
 export type SelectedPrice = {
   index: number
-  price: number
+  price: bigint
 }
 
 export type ProductRow = {
@@ -52,7 +52,7 @@ export type ProductRow = {
   name?: string
   description?: string
   quantity?: number
-  price?: number
+  price?: Price
 }
 
 export type ProductQuantity = {
