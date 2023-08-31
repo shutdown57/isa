@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld('database', {
     if (method === 'all') {
       return await product.all(params.limit, params.offset)
     } else if (method === 'create') {
-      await product.create(params)
+      return await product.create(params)
     } else if (method === 'byId') {
       const { id } = params
       return await product.byId(parseInt(id))
@@ -49,6 +49,8 @@ contextBridge.exposeInMainWorld('database', {
       await product.update(params)
     } else if (method === 'count') {
       await product.count()
+    } else if (method === 'quantity') {
+      await product.quantity(params)
     }
   },
 
