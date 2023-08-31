@@ -42,7 +42,7 @@
 
         <template v-slot:control>
           <div class="self-center full-width no-outline">
-            {{ digitsEnToFa(addCommas(amount)) }}
+            {{ digitsEnToFa(addCommas(`${amount}`)) }}
           </div>
         </template>
       </q-field>
@@ -61,7 +61,7 @@ import { computed, onMounted } from 'vue'
 import { useStore } from 'src/store'
 import { FilterSelect } from 'src/utils/Filters'
 
-const props = defineProps<{product: ProductRow, index: number}>()
+const props = defineProps<{product: ProductRow, index: number, buy: boolean}>()
 
 const store = useStore()
 
@@ -70,16 +70,19 @@ const emit = defineEmits<{(e: 'RowDelete', index: number): void
   (e: 'QuantityValue', { quantity, index }: SelectedQuantity): void
   (e: 'ProductValue', { id, index }: ProductRow): void}>()
 
-const amount = computed(() => (props.product?.priceSell ?? 0) * (props.product?.quantity ?? 0))
+const amount = computed(() => (props.product?.price?.sell ?? BigInt(0)) * BigInt(props.product?.quantity ?? 0))
 const products = computed(() => store.getters['product/products'])
 const price = computed({
   get () {
-    return props.product?.priceSell
+    if (props.buy) {
+      return `${props.product?.price?.buy}`
+    }
+    return `${props.product?.price?.sell}`
   },
   set (value) {
-    if (!value) value = 0
+    if (!value) value = '0'
     const payload: SelectedPrice = {
-      price: value,
+      price: BigInt(value),
       index: props.index
     }
     emit('PriceValue', payload)
@@ -112,10 +115,13 @@ const product = computed({
       name: p.name,
       index: props.index
     }
-    console.log(p, price.value)
     emit('ProductValue', payload)
     if (price.value) return false
-    price.value = p.priceSell ?? 0
+    if (props.buy) {
+      price.value = `${p.price?.buy ?? null}`
+    } else {
+      price.value = `${p.price?.sell ?? null}`
+    }
     if (quantity.value) return false
     quantity.value = 1
   }
