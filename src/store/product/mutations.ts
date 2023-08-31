@@ -9,6 +9,11 @@ const mutation: MutationTree<ProductStateInterface> = {
 
   PRODUCT_SET (state: ProductStateInterface, data: Product): void {
     state.product = data
+  },
+
+  CLEAR (state: ProductStateInterface) {
+    state.products = [] as Array<Product>
+    state.product = {} as Product
   }
 }
 
