@@ -6,11 +6,11 @@ import { InvoiceInstallment } from 'src/interface/invoice'
 export class Installment {
   private prisma
 
-  constructor() {
+  constructor () {
     this.prisma = new PrismaClient()
   }
 
-  async all(limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0): Promise<any> {
     return await this
       .prisma
       .installment
@@ -25,9 +25,9 @@ export class Installment {
       })
   }
 
-  async create(payload: InvoiceInstallment): Promise<void> {
-    console.log(payload)
-    // await this.prisma.installment.create({ data: payload })
+  async create (payload: InvoiceInstallment): Promise<void> {
+    // console.log(payload)
+    await this.prisma.installment.create({ data: payload })
     // await this.prisma.installment.upsert({
     //   where: {  }
     // })
@@ -40,22 +40,21 @@ export class Installment {
   //   })
   // }
 
-
-  async byInvoiceId(id: number): Promise<any> {
+  async byInvoiceId (id: number): Promise<any> {
     return await this.prisma.installment.findFirst({
       where: { id },
       include: { customer: true }
     })
   }
 
-  async byId(id: number): Promise<any> {
+  async byId (id: number): Promise<any> {
     return await this.prisma.installment.findFirst({
       where: { id },
       include: { invoice: true, customer: true }
     })
   }
 
-  async update(payload: InstallmentUpdate): Promise<void> {
+  async update (payload: InstallmentUpdate): Promise<void> {
     const { id, ...data } = payload
     await this.prisma.installment.update({
       where: { id },
