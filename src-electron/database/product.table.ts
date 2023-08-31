@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-import { ProductCreate, ProductUpdate } from 'src/interface/product'
+import { ProductCreate, ProductQuantity, ProductUpdate } from 'src/interface/product'
 
 export class Product {
   private prisma
@@ -9,7 +9,7 @@ export class Product {
     this.prisma = new PrismaClient()
   }
 
-  async all (limit = 20, offset = 0): Promise<any> {
+  async all (limit = 20, offset = 0) {
     return await this.prisma.product.findMany({
       skip: offset,
       take: limit,
@@ -21,7 +21,7 @@ export class Product {
   }
 
   async create (payload: ProductCreate) {
-    await this.prisma.product.create({ data: payload })
+    return await this.prisma.product.create({ data: payload })
   }
 
   async update (payload: ProductUpdate) {
@@ -36,7 +36,8 @@ export class Product {
     return await this.prisma.product.findUnique({
       where: { id },
       include: {
-        invoices: true
+        invoices: true,
+        price: true
       }
     })
   }
@@ -53,5 +54,13 @@ export class Product {
 
   async count (): Promise<number> {
     return await this.prisma.product.count()
+  }
+
+  async quantity (payload: ProductQuantity) {
+    const { id, quantity } = payload
+    await this.prisma.product.update({
+      where: { id },
+      data: { quantity: parseInt(`${quantity}`) }
+    })
   }
 }
