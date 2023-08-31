@@ -10,10 +10,10 @@
             <strong>نام: </strong> {{ product.name }}
           </p>
           <p>
-            <strong>قیمت خرید: </strong> {{ digitsEnToFa(addCommas(product.priceBuy)) }}
+            <strong>قیمت خرید: </strong> {{ digitsEnToFa(addCommas(product?.price?.buy)) }}
           </p>
           <p>
-            <strong>قیمت فروش: </strong> {{ digitsEnToFa(addCommas(product.priceSell)) }}
+            <strong>قیمت فروش: </strong> {{ digitsEnToFa(addCommas(product?.price?.sell)) }}
           </p>
           <p>
             <strong>تعداد: </strong> {{ digitsEnToFa(String(product.quantity)) }}
