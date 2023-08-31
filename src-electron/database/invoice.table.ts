@@ -19,7 +19,7 @@ export class Invoice {
     return await this.prisma.invoice.count({ where: { buy: false } })
   }
 
-  async all (limit: number = 20, offset: number = 0, buy: boolean = false): Promise<any> {
+  async all (limit = 20, offset = 0, buy = false) {
     return await this.prisma.invoice.findMany({
       skip: offset,
       take: limit,
@@ -55,34 +55,12 @@ export class Invoice {
     if (payload.buy) {
       await this.prisma.invoice.update({
         where: { id },
-        data: {
-          number: payload.number,
-          totalAmount: payload.totalAmount,
-          description: payload.description,
-          installment: payload.installment,
-          installmentQuantity: payload.installmentQuantity,
-          prepayment: payload.prepayment,
-          buy: true,
-          customerId: undefined,
-          vendorId: payload.vendorId,
-          accountId: payload.accountId
-        }
+        data: { ...payload, buy: true, customerId: undefined }
       })
     } else {
       await this.prisma.invoice.update({
         where: { id },
-        data: {
-          number: payload.number,
-          totalAmount: payload.totalAmount,
-          description: payload.description,
-          installment: payload.installment,
-          installmentQuantity: payload.installmentQuantity,
-          prepayment: payload.prepayment,
-          buy: false,
-          customerId: payload.customerId,
-          vendorId: undefined,
-          accountId: payload.accountId
-        }
+        data: { ...payload, buy: false, vendorId: undefined }
       })
     }
   }
@@ -118,7 +96,7 @@ export class Invoice {
       const installments = []
       const prepayment = parseInt(`${payload.prepayment ?? '0'}`)
       const remainded = totlAmount - prepayment
-      const count = payload.installmentQuantity ?? 1
+      const count = parseInt(`${payload.installmentQuantity ?? '1'}`)
       const amount = remainded / count
       for (let i = 0; i < count; i++) {
         installments.push({ paid: false, amount })
