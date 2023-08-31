@@ -70,6 +70,9 @@ watch(route.query, (value) => {
 
 onMounted(() => {
   fetchData()
+
+  store.commit('invoice/CLEAR')
+  store.commit('product/CLEAR')
 })
 
 const fetchData = async () => {
