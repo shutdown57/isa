@@ -103,6 +103,19 @@ const handleAddProduct = async () => {
     installmentQuantity: invoice.installmentQuantity?.value,
     products
   })
+  for (const product of products) {
+    if (invoice.buy?.value) {
+      await store.dispatch('product/quantity', {
+        id: product.id,
+        quantity: +parseInt(`${product.quantity}`)
+      })
+    } else {
+      await store.dispatch('product/quantity', {
+        id: product.id,
+        quantity: -parseInt(`${product.quantity}`)
+      })
+    }
+  }
   let totalAmount = 0
   products.forEach(v => { totalAmount += (parseInt(`${v.price || '0'}`) * parseInt(`${v.quantity || '0'}`)) })
   emit('TotalAmount', totalAmount)
