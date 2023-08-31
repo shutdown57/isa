@@ -54,3 +54,8 @@ export type ProductRow = {
   quantity?: number
   price?: number
 }
+
+export type ProductQuantity = {
+  id: number
+  quantity: number
+}
