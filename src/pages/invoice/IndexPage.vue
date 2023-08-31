@@ -7,6 +7,10 @@
           label="افزودن فاکتور"
           @click.prevent="() => router.push({ path: '/invoice/create' })"
         />
+
+        <q-separator vertical inset />
+
+        <q-toggle :label="`نمایش فاکتورهای ${buy ? 'خرید' : 'فروش'}`" v-model="buy" />
       </q-card-section>
     </q-card>
 
@@ -25,6 +29,7 @@
               <th></th>
             </tr>
           </thead>
+
           <tbody>
             <tr v-for="invoice in invoices" :key="invoice.id">
               <td class="text-center">{{ digitsEnToFa(invoice.id) }}</td>
@@ -73,9 +78,10 @@ const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
-const current = ref(1)
-const limit = ref(20)
-const offset = ref(0)
+const current = ref<number>(1)
+const limit = ref<number>(20)
+const offset = ref<number>(0)
+const buy = ref<boolean>(false)
 
 const page = computed({
   get () {
@@ -94,13 +100,15 @@ const invoices = computed(() => store.getters['invoice/invoices'])
 const invoiceCount = computed(() => store.getters['invoice/count'])
 
 onMounted(() => {
-  const { limit: l, offset: o, page: p } = route.query
+  const { limit: l, offset: o, page: p, buy: b } = route.query
   if (l) limit.value = parseInt(`${l}`)
   if (o) offset.value = parseInt(`${o}`)
   if (p) current.value = parseInt(`${p}`)
+  if (b) buy.value = parseInt(`${b}`) === 1
   store.dispatch('invoice/getSellInvoices', {
     limit: limit.value,
-    offset: offset.value
+    offset: offset.value,
+    buy: buy.value
   })
   store.dispatch('invoice/count')
 })
@@ -110,13 +118,33 @@ watch(current, (value) => {
   offset.value = limit.value > 0 ? limit.value - 20 : 0
   store.dispatch('invoice/getSellInvoices', {
     limit: limit.value,
-    offset: offset.value
+    offset: offset.value,
+    buy: buy.value
   })
   router.push({
     query: {
       limit: limit.value,
       offset: offset.value,
-      page: current.value
+      page: current.value,
+      buy: buy.value ? 1 : 0
+    }
+  })
+})
+
+watch(buy, (value) => {
+  limit.value = current.value * 20
+  offset.value = limit.value > 0 ? limit.value - 20 : 0
+  store.dispatch('invoice/getSellInvoices', {
+    limit: limit.value,
+    offset: offset.value,
+    buy: value
+  })
+  router.push({
+    query: {
+      limit: limit.value,
+      offset: offset.value,
+      page: current.value,
+      buy: value ? 1 : 0
     }
   })
 })
