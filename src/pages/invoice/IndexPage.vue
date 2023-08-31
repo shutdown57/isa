@@ -33,7 +33,7 @@
           <tbody>
             <tr v-for="invoice in invoices" :key="invoice.id">
               <td class="text-center">{{ digitsEnToFa(invoice.id) }}</td>
-              <td class="text-center">{{ invoice.number }}</td>
+              <td class="text-center">{{ digitsEnToFa(invoice.number) }}</td>
               <td class="text-center">{{ digitsEnToFa(addCommas(`${invoice.totalAmount}`)) }}</td>
               <td :class="[ 'text-center', invoice.prepayment !== invoice.totalAmount ? 'bg-red' : 'bg-green' ]">
                 {{ digitsEnToFa(addCommas(`${invoice.prepayment}`)) }}
