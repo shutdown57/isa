@@ -44,10 +44,11 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
     context.commit('INVOICE_SET', data)
   },
 
-  async updateInvoice (context, payload): Promise<void> {
+  async updateInvoice ({ dispatch }, payload): Promise<void> {
+    console.log(payload)
     await database.invoice('update', payload)
     const { id } = payload
-    await context.dispatch('getInvoice', { id: parseInt(id) })
+    await dispatch('getInvoice', { id: parseInt(id) })
   },
 
   async upsertProducts (_, payload): Promise<void> {
