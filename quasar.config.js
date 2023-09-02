@@ -34,7 +34,8 @@ module.exports = configure(function (ctx) {
     boot: [
       'axios',
       'moment',
-      'persianTools'
+      'persianTools',
+      'chart'
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -121,7 +122,7 @@ module.exports = configure(function (ctx) {
 
     animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
-    animations: [],
+    // animations: [],
 
     // https://v2.quasar.dev/quasar-cli-webpack/developing-ssr/configuring-ssr
     ssr: {
