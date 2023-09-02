@@ -4,7 +4,7 @@ Installment Store Account (ISA) electron app.
 
 ## Install the dependencies
 ```bash
-yarn
+pnpm install
 # or
 npm install
 ```
@@ -15,13 +15,18 @@ quasar dev
 ```
 
 
+### Start the app in electron development mode (hot-code reloading, error reporting, etc.)
+```bash
+quasar dev -m electron
+```
+
+
 ### Lint the files
 ```bash
 yarn lint
 # or
 npm run lint
 ```
-
 
 
 ### Build the app for production
