@@ -4,6 +4,8 @@
       <q-card-section>
         <div class="q-gutter-md" style="min-width: 300px;max-width: 500px">
           <q-input outlined dense v-model="name" label="نام محصول" />
+          <!-- <q-input outlined dense v-model="buy" label="قیمت خرید" /> -->
+          <!-- <q-input outlined dense v-model="sell" label="قیمت فروش" /> -->
           <q-input outlined dense v-model="description" label="توضیحات محصول" type="textarea" />
           <q-btn color="secondary" label="ثبت" @click.prevent="handleCreateProduct" />
         </div>
@@ -36,10 +38,12 @@ import { useRouter } from 'vue-router'
 const store = useStore()
 const router = useRouter()
 
-const name = ref('')
-const description = ref('')
-const quantity = ref(0)
-const alert = ref(false)
+const name = ref<string|null>(null)
+// const buy = ref<number|null>(null)
+// const sell = ref<number|null>(null)
+const description = ref<string|null>(null)
+const quantity = ref<number|null>(null)
+const alert = ref<boolean>(false)
 
 const handleCreateProduct = async () => {
   if (!name.value) {
@@ -49,10 +53,15 @@ const handleCreateProduct = async () => {
   const product = {
     name: name.value,
     description: description.value,
-    quantity: +quantity.value || 0
+    quantity: +(quantity.value ?? 0)
   }
-
   await store.dispatch('product/createProduct', product)
+
+  // const price = {
+  //   sell: +(sell.value ?? 0),
+  //   buy: +(buy.value ?? 0)
+  // }
+  // await store.dispatch('price/create', price)
   router.push({ path: '/product' })
 }
 </script>
