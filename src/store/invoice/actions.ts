@@ -55,7 +55,7 @@ const actions: ActionTree<InvoiceStateInterface, StateInterface> = {
     const { id } = payload
     await database.invoice('upsertProducts', {
       id,
-      products: JSON.parse(JSON.stringify(payload.products)),
+      products: payload.products,
       prepayment: JSON.parse(JSON.stringify(payload.prepayment)),
       installmentQuantity: JSON.parse(JSON.stringify(payload.installmentQuantity)),
       installment: JSON.parse(JSON.stringify(payload.installment))
