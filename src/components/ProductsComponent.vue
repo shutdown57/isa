@@ -102,7 +102,7 @@ const handleAddProduct = async () => {
     prepayment: invoice.prepayment?.value,
     installment: invoice.installment?.value,
     installmentQuantity: invoice.installmentQuantity?.value,
-    products
+    products: [...products.map(v => ({ ...v }))]
   })
   for (const product of products) {
     if (invoice.buy?.value) {
