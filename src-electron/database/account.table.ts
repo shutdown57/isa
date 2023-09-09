@@ -9,12 +9,12 @@ export class Account {
     this.prisma = new PrismaClient()
   }
 
-  async all (limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0) {
     return await this.prisma.account.findMany({
-        skip: offset,
-        take: limit,
-        orderBy: { name: 'asc' }
-      })
+      skip: offset,
+      take: limit,
+      orderBy: { name: 'asc' }
+    })
   }
 
   async create (payload: AccountCreate) {
@@ -24,7 +24,7 @@ export class Account {
 
   async byId (id: number) {
     return await this.prisma.account.findUnique({
-      where: { id: id },
+      where: { id },
       include: { invoices: true }
     })
   }
