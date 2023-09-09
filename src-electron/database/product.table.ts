@@ -60,7 +60,7 @@ export class Product {
     const { id, quantity } = payload
     await this.prisma.product.update({
       where: { id },
-      data: { quantity: parseInt(`${quantity}`) }
+      data: { quantity: { increment: parseInt(`${quantity}`) } }
     })
   }
 }
