@@ -1,8 +1,7 @@
 <template>
   <q-item
     clickable
-    tag="a"
-    :to="link"
+    @click.prevent="goto"
   >
     <q-item-section
       v-if="icon"
@@ -18,31 +17,12 @@
   </q-item>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
+const props = defineProps<{title: string, caption: string, icon: string, link: string}>()
+const router = useRouter()
 
-export default defineComponent({
-  name: 'EssentialLink',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-
-    caption: {
-      type: String,
-      default: ''
-    },
-
-    link: {
-      type: String,
-      default: '#'
-    },
-
-    icon: {
-      type: String,
-      default: ''
-    }
-  }
-})
+const goto = () => {
+  router.push({ path: props.link })
+}
 </script>
