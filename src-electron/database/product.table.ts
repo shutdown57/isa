@@ -1,12 +1,13 @@
-import { PrismaClient } from '@prisma/client'
+import { Base } from './base'
+import {
+  ProductCreate,
+  ProductQuantity,
+  ProductUpdate
+} from 'src/interface/product'
 
-import { ProductCreate, ProductQuantity, ProductUpdate } from 'src/interface/product'
-
-export class Product {
-  private prisma
-
+export class Product extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
   async all (limit = 20, offset = 0) {

@@ -1,15 +1,12 @@
-import { PrismaClient } from '@prisma/client'
-
+import { Base } from './base'
 import { CustomerCreate, CustomerUpdate } from '../../src/interface/customer'
 
-export class Customer {
-  private prisma
-
+export class Customer extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
-  async all (limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0): Promise<any> {
     return await this.prisma.customer.findMany({
       skip: offset,
       take: limit,

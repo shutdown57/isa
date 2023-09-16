@@ -1,16 +1,17 @@
-import { PrismaClient } from '@prisma/client'
-
+import { Base } from './base'
 import { VendorCreate, VendorUpdate } from 'src/interface/vendor'
 
-export class Vendor {
-  private prisma
-
+export class Vendor extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
   async all (limit = 20, offset = 0) {
-    return await this.prisma.vendor.findMany({ skip: offset, take: limit, orderBy: { name: 'asc' } })
+    return await this.prisma.vendor.findMany({
+      skip: offset,
+      take: limit,
+      orderBy: { name: 'asc' }
+    })
   }
 
   async create (payload: VendorCreate) {

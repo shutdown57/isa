@@ -1,12 +1,13 @@
-import { PrismaClient } from '@prisma/client'
+import { Base } from './base'
+import {
+  AccountCreate,
+  AccountUpdate,
+  AccountUpdateAmount
+} from 'src/interface/account'
 
-import { AccountCreate, AccountUpdate, AccountUpdateAmount } from '../../src/interface/account'
-
-export class Account {
-  private prisma
-
+export class Account extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
   async all (limit = 20, offset = 0) {
@@ -19,7 +20,9 @@ export class Account {
 
   async create (payload: AccountCreate) {
     const { amount } = payload
-    await this.prisma.account.create({ data: { ...payload, amount: amount ?? 0 } })
+    await this.prisma.account.create({
+      data: { ...payload, amount: amount ?? 0 }
+    })
   }
 
   async byId (id: number) {

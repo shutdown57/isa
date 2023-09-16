@@ -1,15 +1,12 @@
-import { PrismaClient } from '@prisma/client'
-
+import { Base } from './base'
 import { ExpenseCreate, ExpenseUpdate } from 'src/interface/expense'
 
-export class Expense {
-  private prisma
-
+export class Expense extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
-  async all (limit: number = 20, offset: number = 0): Promise<any> {
+  async all (limit = 20, offset = 0) {
     return await this.prisma.expense.findMany({
       skip: offset,
       take: limit,
@@ -20,7 +17,9 @@ export class Expense {
 
   async create (payload: ExpenseCreate) {
     const { amount } = payload
-    await this.prisma.expense.create({ data: { ...payload, amount: parseInt(`${amount}`) } })
+    await this.prisma.expense.create({
+      data: { ...payload, amount: parseInt(`${amount}`) }
+    })
   }
 
   async byId (id: number) {
@@ -41,7 +40,7 @@ export class Expense {
   async search (needle: string) {
     return await this.prisma.expense.findMany({
       where: {
-        title: { contains: needle },
+        title: { contains: needle }
       },
       take: 20,
       orderBy: { createdAt: 'desc' }

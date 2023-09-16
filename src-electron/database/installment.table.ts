@@ -1,28 +1,22 @@
-import { PrismaClient } from '@prisma/client'
-
+import { Base } from './base'
 import { InstallmentUpdate } from '../../src/interface/installment'
 import { InvoiceInstallment } from 'src/interface/invoice'
 
-export class Installment {
-  private prisma
-
+export class Installment extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
   async all (limit = 20, offset = 0): Promise<any> {
-    return await this
-      .prisma
-      .installment
-      .findMany({
-        take: limit,
-        skip: offset,
-        orderBy: { createdAt: 'desc' },
-        include: {
-          customer: true,
-          invoice: true
-        }
-      })
+    return await this.prisma.installment.findMany({
+      take: limit,
+      skip: offset,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        customer: true,
+        invoice: true
+      }
+    })
   }
 
   async create (payload: InvoiceInstallment): Promise<void> {

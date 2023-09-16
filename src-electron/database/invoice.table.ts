@@ -1,13 +1,14 @@
-import { PrismaClient } from '@prisma/client'
+import { Base } from './base'
 import { ProductRow } from 'src/interface/product'
+import {
+  InvoiceCreate,
+  InvoiceInstallment,
+  InvoiceUpdate
+} from 'src/interface/invoice'
 
-import { InvoiceCreate, InvoiceInstallment, InvoiceUpdate } from 'src/interface/invoice'
-
-export class Invoice {
-  private prisma
-
+export class Invoice extends Base {
   constructor () {
-    this.prisma = new PrismaClient()
+    super()
   }
 
   async count (buy: boolean | null) {
@@ -90,7 +91,8 @@ export class Invoice {
 
     if (payload.installment) {
       const totlAmount = payload.products.reduce(
-        (a, c: ProductRow) => a + (parseInt(`${c.price || 0}`) * parseInt(`${c.quantity || 0}`)),
+        (a, c: ProductRow) =>
+          a + parseInt(`${c.price || 0}`) * parseInt(`${c.quantity || 0}`),
         0
       )
       const installments = []
